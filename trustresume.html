@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Talent Hunt — Trust Resume</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.resume-layout{display:grid;grid-template-columns:1fr 260px;gap:16px;}
+.resume-main{display:flex;flex-direction:column;gap:14px;}
+.profile-hero{background:linear-gradient(135deg,rgba(0,212,255,0.08),rgba(0,255,136,0.04));border:1px solid rgba(0,212,255,0.2);border-radius:8px;padding:24px;display:flex;align-items:center;gap:20px;}
+.profile-av-big{width:64px;height:64px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--accent);background:rgba(0,212,255,0.08);flex-shrink:0;position:relative;}
+.profile-av-big::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:1px solid rgba(0,212,255,0.2);animation:pulse-ring 2s ease-out infinite;}
+.profile-name{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:#fff;margin-bottom:4px;}
+.profile-title{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--accent2);margin-bottom:8px;}
+.profile-badges{display:flex;gap:6px;flex-wrap:wrap;}
+.p-badge{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 10px;border-radius:2px;}
+.trust-score-big{margin-left:auto;text-align:center;}
+.tsb-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:2px;margin-bottom:4px;}
+.tsb-val{font-family:'Orbitron',monospace;font-size:42px;font-weight:900;color:var(--accent2);line-height:1;}
+.tsb-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);margin-top:4px;}
+.section-panel{background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.section-head{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.section-title{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--text2);}
+.exp-item{padding:14px 18px;border-bottom:1px solid var(--border);}
+.exp-item:last-child{border-bottom:none;}
+.exp-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;}
+.exp-title{font-size:13px;font-weight:600;color:var(--text);}
+.exp-company{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent);margin-bottom:6px;}
+.exp-desc{font-size:12px;color:var(--text2);line-height:1.6;}
+.exp-proof{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.proof-tag{font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 10px;border-radius:2px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);color:var(--accent);cursor:pointer;}
+.proof-tag:hover{background:rgba(0,212,255,0.12);}
+.proof-tag.verified{background:rgba(0,255,136,0.06);border-color:rgba(0,255,136,0.2);color:var(--accent2);}
+.skill-proof-item{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.skill-proof-item:last-child{border-bottom:none;}
+.sp-name{font-size:13px;font-weight:600;color:var(--text);width:120px;}
+.sp-bar-wrap{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.sp-bar{height:100%;border-radius:3px;}
+.sp-pct{font-family:'Share Tech Mono',monospace;font-size:11px;width:36px;text-align:right;}
+.sp-proof{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--accent2);cursor:pointer;border:1px solid rgba(0,255,136,0.2);padding:2px 8px;border-radius:2px;background:rgba(0,255,136,0.06);}
+.resume-right{display:flex;flex-direction:column;gap:12px;}
+.qr-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:16px;text-align:center;}
+.qr-box{width:80px;height:80px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:28px;}
+.qr-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);line-height:1.5;}
+.share-btn{display:block;width:100%;margin-top:10px;background:transparent;border:1px solid var(--accent);color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:10px;padding:7px;border-radius:3px;cursor:pointer;letter-spacing:1px;}
+.share-btn:hover{background:rgba(0,212,255,0.08);}
+.stats-mini{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:14px;}
+.stats-mini-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);}
+.stats-mini-row:last-child{border-bottom:none;}
+.sml{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);}
+.smv{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;}
+.verified-check{color:var(--accent2);font-size:11px;}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo-zone">
+      <div class="logo-mark"><span class="t1">TALENT</span> <span class="t3">HUNT</span></div>
+      <div class="logo-tagline">// SKILLS OVER DEGREES · v1.0</div>
+    </div>
+    <div class="user-card">
+      <div class="avatar">AK</div>
+      <div class="user-info">
+        <div class="user-name">Aryan Kumar</div>
+        <div class="user-rank">◆ RANK #142 · LVL 38</div>
+      </div>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="setMode(this,'dev')">Developer</button>
+      <button class="mode-btn" onclick="setMode(this,'hire')">Employer</button>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">// OVERVIEW</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">⊞</div> Dashboard</div>
+      <div class="nav-item" onclick="location.href='evolution.html'"><div class="nav-icon">📈</div> Evolution Curve</div>
+      <div class="nav-section">// COMPETE</div>
+      <div class="nav-item" onclick="location.href='codeclash.html'"><div class="nav-icon">⚔</div> Code Clash <span class="nav-badge">3 LIVE</span></div>
+      <div class="nav-item" onclick="location.href='skillhunt.html'"><div class="nav-icon">🎯</div> Skill Hunt</div>
+      <div class="nav-item" onclick="location.href='leaderboard.html'"><div class="nav-icon">🏆</div> Leaderboard</div>
+      <div class="nav-section">// GROW</div>
+      <div class="nav-item" onclick="location.href='mockbot.html'"><div class="nav-icon">🤖</div> Mock Bot</div>
+      <div class="nav-item" onclick="location.href='pathfinder.html'"><div class="nav-icon">💬</div> AI Pathfinder</div>
+      <div class="nav-item" onclick="location.href='jobsim.html'"><div class="nav-icon">🧪</div> Job Simulation <span class="nav-badge green">NEW</span></div>
+      <div class="nav-section">// PROFILE</div>
+      <div class="nav-item active"><div class="nav-icon">🔗</div> Trust Resume</div>
+      <div class="nav-item" onclick="location.href='talentvault.html'"><div class="nav-icon">🏅</div> Talent Vault</div>
+      <div class="nav-item" onclick="doSignOut()" style="margin-top:8px;"><div class="nav-icon">⎋</div> Sign Out</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="xp-label"><span>XP PROGRESS</span><span>6,800 / 10,000</span></div>
+      <div class="xp-bar"><div class="xp-fill"></div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-title">🔗 TRUST RESUME</div>
+      <div class="topbar-right">
+        <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent2);">✓ EXPERT VERIFIED</span>
+        <button class="panel-action">EXPORT PDF</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="resume-layout">
+        <div class="resume-main">
+          <!-- PROFILE HERO -->
+          <div class="profile-hero">
+            <div class="profile-av-big">AK</div>
+            <div>
+              <div class="profile-name">ARYAN KUMAR</div>
+              <div class="profile-title">Full Stack Developer · React · DSA · TypeScript</div>
+              <div class="profile-badges">
+                <span class="p-badge" style="background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.2);">⚡ React Pro</span>
+                <span class="p-badge" style="background:rgba(0,255,136,0.1);color:var(--accent2);border:1px solid rgba(0,255,136,0.2);">✓ Expert Verified</span>
+                <span class="p-badge" style="background:rgba(168,85,247,0.1);color:var(--accent4);border:1px solid rgba(168,85,247,0.2);">🌲 DS Expert</span>
+              </div>
+            </div>
+            <div class="trust-score-big">
+              <div class="tsb-label">TRUST SCORE</div>
+              <div class="tsb-val">94.2</div>
+              <div class="tsb-sub">TOP 8% PLATFORM</div>
+            </div>
+          </div>
+
+          <!-- SKILLS WITH PROOF -->
+          <div class="section-panel">
+            <div class="section-head">
+              <div class="section-title">// SKILLS — PROOF-LINKED</div>
+              <button class="panel-action">+ ADD SKILL</button>
+            </div>
+            <div class="skill-proof-item">
+              <div class="sp-name">React</div>
+              <div class="sp-bar-wrap"><div class="sp-bar" style="width:92%;background:var(--accent);"></div></div>
+              <div class="sp-pct" style="color:var(--accent);">92%</div>
+              <span class="sp-proof">3 CLASH WINS</span>
+            </div>
+            <div class="skill-proof-item">
+              <div class="sp-name">DSA</div>
+              <div class="sp-bar-wrap"><div class="sp-bar" style="width:84%;background:var(--accent2);"></div></div>
+              <div class="sp-pct" style="color:var(--accent2);">84%</div>
+              <span class="sp-proof">47 WINS</span>
+            </div>
+            <div class="skill-proof-item">
+              <div class="sp-name">TypeScript</div>
+              <div class="sp-bar-wrap"><div class="sp-bar" style="width:78%;background:var(--accent4);"></div></div>
+              <div class="sp-pct" style="color:var(--accent4);">78%</div>
+              <span class="sp-proof">BADGE EARNED</span>
+            </div>
+            <div class="skill-proof-item">
+              <div class="sp-name">Node.js</div>
+              <div class="sp-bar-wrap"><div class="sp-bar" style="width:65%;background:var(--accent3);"></div></div>
+              <div class="sp-pct" style="color:var(--accent3);">65%</div>
+              <span class="sp-proof">2 PROJECTS</span>
+            </div>
+            <div class="skill-proof-item">
+              <div class="sp-name">System Design</div>
+              <div class="sp-bar-wrap"><div class="sp-bar" style="width:40%;background:var(--danger);"></div></div>
+              <div class="sp-pct" style="color:var(--danger);">40%</div>
+              <span class="sp-proof" style="border-color:rgba(255,68,102,0.2);color:var(--danger);background:rgba(255,68,102,0.06);">IN PROGRESS</span>
+            </div>
+          </div>
+
+          <!-- PROJECTS -->
+          <div class="section-panel">
+            <div class="section-head">
+              <div class="section-title">// PROJECTS — VERIFIED</div>
+              <button class="panel-action">+ ADD PROJECT</button>
+            </div>
+            <div class="exp-item">
+              <div class="exp-top">
+                <div>
+                  <div class="exp-title">Real-Time Collaborative Editor</div>
+                  <div class="exp-company">Personal Project · React · WebSockets · Node.js</div>
+                </div>
+                <span class="verified-check">✓ VERIFIED</span>
+              </div>
+              <div class="exp-desc">Built a Google Docs-like collaborative editor with OT (Operational Transform) for conflict resolution, supporting 100+ concurrent users.</div>
+              <div class="exp-proof">
+                <span class="proof-tag verified">✓ GitHub</span>
+                <span class="proof-tag verified">✓ Live Demo</span>
+                <span class="proof-tag">Code Clash Win</span>
+              </div>
+            </div>
+            <div class="exp-item">
+              <div class="exp-top">
+                <div>
+                  <div class="exp-title">E-Commerce API — Razorpay Integration</div>
+                  <div class="exp-company">Skill Hunt Submission · Node.js · PostgreSQL</div>
+                </div>
+                <span class="verified-check">✓ VERIFIED</span>
+              </div>
+              <div class="exp-desc">Complete REST API with cart, orders, payment retry logic, idempotency keys, and webhook handling. Scored 87/100 by Razorpay engineers.</div>
+              <div class="exp-proof">
+                <span class="proof-tag verified">✓ Employer Reviewed</span>
+                <span class="proof-tag verified">✓ GitHub</span>
+                <span class="proof-tag">Score: 87/100</span>
+              </div>
+            </div>
+            <div class="exp-item">
+              <div class="exp-top">
+                <div>
+                  <div class="exp-title">DSA Visualizer</div>
+                  <div class="exp-company">Open Source · React · Canvas API</div>
+                </div>
+                <span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);">SELF REPORTED</span>
+              </div>
+              <div class="exp-desc">Interactive visualizer for sorting algorithms and graph traversals. 1.2K GitHub stars.</div>
+              <div class="exp-proof">
+                <span class="proof-tag">GitHub (1.2K ⭐)</span>
+                <span class="proof-tag">Live Demo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="resume-right">
+          <div class="qr-card">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:2px;margin-bottom:12px;">// SHARE RESUME</div>
+            <div class="qr-box">🔗</div>
+            <div class="qr-label">talent.hunt/u/aryan-kumar<br>Public · Verified</div>
+            <button class="share-btn">📋 COPY LINK</button>
+            <button class="share-btn" style="border-color:var(--accent2);color:var(--accent2);">⬇ DOWNLOAD PDF</button>
+          </div>
+
+          <div class="stats-mini">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:2px;margin-bottom:10px;">// QUICK STATS</div>
+            <div class="stats-mini-row">
+              <span class="sml">CLASH WINS</span>
+              <span class="smv" style="color:var(--accent2);">47</span>
+            </div>
+            <div class="stats-mini-row">
+              <span class="sml">VERIFIED BADGES</span>
+              <span class="smv" style="color:var(--accent);">12</span>
+            </div>
+            <div class="stats-mini-row">
+              <span class="sml">SKILL HUNTS</span>
+              <span class="smv" style="color:var(--accent3);">4</span>
+            </div>
+            <div class="stats-mini-row">
+              <span class="sml">PROFILE VIEWS</span>
+              <span class="smv" style="color:var(--accent4);">284</span>
+            </div>
+            <div class="stats-mini-row">
+              <span class="sml">EMPLOYER SAVES</span>
+              <span class="smv" style="color:var(--gold);">18</span>
+            </div>
+          </div>
+
+          <div class="section-panel">
+            <div class="section-head"><div class="section-title">// VISIBILITY</div></div>
+            <div style="padding:14px 16px;">
+              <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:10px;">Control what employers see</div>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:8px;">
+                <input type="checkbox" checked style="accent-color:var(--accent2);"/> 
+                <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text2);">Show Trust Score</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:8px;">
+                <input type="checkbox" checked style="accent-color:var(--accent2);"/> 
+                <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text2);">Show Clash Stats</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:8px;">
+                <input type="checkbox" style="accent-color:var(--accent2);"/> 
+                <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text2);">Hide Education</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="checkbox" style="accent-color:var(--accent2);"/> 
+                <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text2);">Blind Mode (hide name)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+<script>
+function setMode(btn,m){document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function doSignOut(){location.href='landing.html';}
+</script>
+</body>
+</html>

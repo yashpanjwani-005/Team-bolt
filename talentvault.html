@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Talent Hunt — Talent Vault</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.vault-header-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.vault-filter-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.vault-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.vault-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:18px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.vault-card:hover{transform:translateY(-3px);}
+.vault-card.earned{border-color:rgba(0,212,255,0.3);background:rgba(0,212,255,0.03);}
+.vault-card.earned:hover{box-shadow:0 0 20px rgba(0,212,255,0.12);}
+.vault-card.locked{opacity:0.5;cursor:default;}
+.vault-card.locked:hover{transform:none;}
+.vault-card.epic{border-color:rgba(168,85,247,0.4);background:rgba(168,85,247,0.04);}
+.vault-card.epic:hover{box-shadow:0 0 20px rgba(168,85,247,0.12);}
+.vault-icon-wrap{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 10px;position:relative;}
+.vault-card.earned .vault-icon-wrap{box-shadow:0 0 16px rgba(0,212,255,0.3);}
+.vault-card.epic .vault-icon-wrap{box-shadow:0 0 20px rgba(168,85,247,0.4);}
+.badge-earned-ring{position:absolute;inset:-3px;border-radius:50%;border:1px solid rgba(0,212,255,0.5);}
+.vault-name{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text);margin-bottom:4px;}
+.vault-desc{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);line-height:1.5;}
+.vault-proof{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--accent2);margin-top:6px;}
+.vault-locked-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);margin-top:6px;}
+.vault-xp{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--gold);margin-top:4px;}
+.rarity-tag{position:absolute;top:8px;right:8px;font-family:'Share Tech Mono',monospace;font-size:8px;padding:2px 7px;border-radius:2px;}
+.rarity-epic{background:rgba(168,85,247,0.12);color:var(--accent4);border:1px solid rgba(168,85,247,0.3);}
+.rarity-rare{background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.2);}
+.progress-section{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:20px;margin-bottom:20px;}
+.progress-section-title{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:2px;margin-bottom:16px;}
+.prog-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.prog-icon{font-size:18px;width:24px;text-align:center;}
+.prog-info{flex:1;}
+.prog-name{font-size:12px;font-weight:600;color:var(--text);}
+.prog-bar-wrap{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-top:4px;}
+.prog-bar{height:100%;border-radius:2px;}
+.prog-pct{font-family:'Share Tech Mono',monospace;font-size:10px;width:36px;text-align:right;}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo-zone">
+      <div class="logo-mark"><span class="t1">TALENT</span> <span class="t3">HUNT</span></div>
+      <div class="logo-tagline">// SKILLS OVER DEGREES · v1.0</div>
+    </div>
+    <div class="user-card">
+      <div class="avatar">AK</div>
+      <div class="user-info">
+        <div class="user-name">Aryan Kumar</div>
+        <div class="user-rank">◆ RANK #142 · LVL 38</div>
+      </div>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="setMode(this,'dev')">Developer</button>
+      <button class="mode-btn" onclick="setMode(this,'hire')">Employer</button>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">// OVERVIEW</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">⊞</div> Dashboard</div>
+      <div class="nav-item" onclick="location.href='evolution.html'"><div class="nav-icon">📈</div> Evolution Curve</div>
+      <div class="nav-section">// COMPETE</div>
+      <div class="nav-item" onclick="location.href='codeclash.html'"><div class="nav-icon">⚔</div> Code Clash <span class="nav-badge">3 LIVE</span></div>
+      <div class="nav-item" onclick="location.href='skillhunt.html'"><div class="nav-icon">🎯</div> Skill Hunt</div>
+      <div class="nav-item" onclick="location.href='leaderboard.html'"><div class="nav-icon">🏆</div> Leaderboard</div>
+      <div class="nav-section">// GROW</div>
+      <div class="nav-item" onclick="location.href='mockbot.html'"><div class="nav-icon">🤖</div> Mock Bot</div>
+      <div class="nav-item" onclick="location.href='pathfinder.html'"><div class="nav-icon">💬</div> AI Pathfinder</div>
+      <div class="nav-item" onclick="location.href='jobsim.html'"><div class="nav-icon">🧪</div> Job Simulation <span class="nav-badge green">NEW</span></div>
+      <div class="nav-section">// PROFILE</div>
+      <div class="nav-item" onclick="location.href='trustresume.html'"><div class="nav-icon">🔗</div> Trust Resume</div>
+      <div class="nav-item active"><div class="nav-icon">🏅</div> Talent Vault</div>
+      <div class="nav-item" onclick="location.href='autoapply.html'"><div class="nav-icon">🚀</div> Auto Apply <span class="nav-badge green">NEW</span></div>
+      <div class="nav-item" onclick="doSignOut()" style="margin-top:8px;"><div class="nav-icon">⎋</div> Sign Out</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="xp-label"><span>XP PROGRESS</span><span>6,800 / 10,000</span></div>
+      <div class="xp-bar"><div class="xp-fill"></div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-title">🏅 TALENT VAULT</div>
+      <div class="topbar-right">
+        <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent);">12 / 32 EARNED</span>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- STATS STRIP -->
+      <div class="vault-header-strip">
+        <div class="stat-card"><div class="stat-label">Badges Earned</div><div class="stat-value">12</div><div class="stat-sub">of 32 available</div></div>
+        <div class="stat-card"><div class="stat-label">XP from Badges</div><div class="stat-value">4,200</div><div class="stat-sub">+240 this week</div></div>
+        <div class="stat-card"><div class="stat-label">Rarest Badge</div><div class="stat-value" style="font-size:16px;">🔥</div><div class="stat-sub">10-Day Streak</div></div>
+        <div class="stat-card"><div class="stat-label">Pending Review</div><div class="stat-value">3</div><div class="stat-sub">Expert review queue</div></div>
+      </div>
+
+      <!-- IN PROGRESS -->
+      <div class="progress-section">
+        <div class="progress-section-title">// BADGES IN PROGRESS</div>
+        <div class="prog-row">
+          <div class="prog-icon">☁️</div>
+          <div class="prog-info">
+            <div class="prog-name">Cloud Architect — Complete 3 cloud deployment challenges</div>
+            <div class="prog-bar-wrap"><div class="prog-bar" style="width:66%;background:var(--accent);"></div></div>
+          </div>
+          <div class="prog-pct" style="color:var(--accent);">2/3</div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-icon">🛡</div>
+          <div class="prog-info">
+            <div class="prog-name">ML Core — Score 80%+ on 2 ML Skill Hunts</div>
+            <div class="prog-bar-wrap"><div class="prog-bar" style="width:50%;background:var(--accent4);"></div></div>
+          </div>
+          <div class="prog-pct" style="color:var(--accent4);">1/2</div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-icon">🔥</div>
+          <div class="prog-info">
+            <div class="prog-name">30-Day Streak — Code or clash 30 days in a row</div>
+            <div class="prog-bar-wrap"><div class="prog-bar" style="width:30%;background:var(--accent3);"></div></div>
+          </div>
+          <div class="prog-pct" style="color:var(--accent3);">9/30</div>
+        </div>
+      </div>
+
+      <!-- FILTER -->
+      <div class="vault-filter-bar">
+        <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);">// FILTER:</span>
+        <button class="ftab active" onclick="setTab(this)">ALL</button>
+        <button class="ftab" onclick="setTab(this)">EARNED</button>
+        <button class="ftab" onclick="setTab(this)">LOCKED</button>
+        <button class="ftab" onclick="setTab(this)">EPIC</button>
+        <button class="ftab" onclick="setTab(this)">CLASH</button>
+        <button class="ftab" onclick="setTab(this)">SKILL HUNT</button>
+        <button class="ftab" onclick="setTab(this)">STREAK</button>
+      </div>
+
+      <!-- VAULT GRID -->
+      <div class="vault-grid">
+        <div class="vault-card earned">
+          <div class="vault-icon-wrap" style="background:rgba(0,212,255,0.1);">⚡<div class="badge-earned-ring"></div></div>
+          <div class="vault-name">REACT PRO</div>
+          <div class="vault-desc">Won 3 React-focused Code Clashes</div>
+          <div class="vault-proof">✓ 3 clash wins linked</div>
+          <div class="vault-xp">+500 XP</div>
+        </div>
+
+        <div class="vault-card earned">
+          <div class="vault-icon-wrap" style="background:rgba(0,255,136,0.1);">🌲<div class="badge-earned-ring" style="border-color:rgba(0,255,136,0.5);"></div></div>
+          <div class="vault-name">DS EXPERT</div>
+          <div class="vault-desc">Solved 20 data structure challenges</div>
+          <div class="vault-proof">✓ 20 challenge proofs</div>
+          <div class="vault-xp">+400 XP</div>
+        </div>
+
+        <div class="vault-card earned epic">
+          <span class="rarity-tag rarity-epic">EPIC</span>
+          <div class="vault-icon-wrap" style="background:rgba(255,107,53,0.1);">🔥</div>
+          <div class="vault-name">10-STREAK</div>
+          <div class="vault-desc">Active 10 consecutive days</div>
+          <div class="vault-proof">✓ Activity log verified</div>
+          <div class="vault-xp">+800 XP</div>
+        </div>
+
+        <div class="vault-card earned">
+          <div class="vault-icon-wrap" style="background:rgba(168,85,247,0.1);">🔬<div class="badge-earned-ring" style="border-color:rgba(168,85,247,0.5);"></div></div>
+          <div class="vault-name">VERIFIED DEV</div>
+          <div class="vault-desc">Expert reviewed your profile</div>
+          <div class="vault-proof">✓ Expert signed off</div>
+          <div class="vault-xp">+600 XP</div>
+        </div>
+
+        <div class="vault-card earned">
+          <div class="vault-icon-wrap" style="background:rgba(0,212,255,0.1);">🏆<div class="badge-earned-ring"></div></div>
+          <div class="vault-name">CLASH WINNER</div>
+          <div class="vault-desc">First Code Clash victory</div>
+          <div class="vault-proof">✓ Win #1 linked</div>
+          <div class="vault-xp">+200 XP</div>
+        </div>
+
+        <div class="vault-card earned">
+          <div class="vault-icon-wrap" style="background:rgba(255,215,0,0.1);">⭐<div class="badge-earned-ring" style="border-color:rgba(255,215,0,0.5);"></div></div>
+          <div class="vault-name">TOP 200</div>
+          <div class="vault-desc">Reached global rank #142</div>
+          <div class="vault-proof">✓ Rank verified</div>
+          <div class="vault-xp">+700 XP</div>
+        </div>
+
+        <div class="vault-card earned">
+          <div class="vault-icon-wrap" style="background:rgba(0,255,136,0.1);">🎯<div class="badge-earned-ring" style="border-color:rgba(0,255,136,0.5);"></div></div>
+          <div class="vault-name">SKILL HUNTER</div>
+          <div class="vault-desc">Completed first Skill Hunt</div>
+          <div class="vault-proof">✓ Hunt record linked</div>
+          <div class="vault-xp">+450 XP</div>
+        </div>
+
+        <div class="vault-card earned epic">
+          <span class="rarity-tag rarity-epic">EPIC</span>
+          <div class="vault-icon-wrap" style="background:rgba(168,85,247,0.12);">🧠</div>
+          <div class="vault-name">HARD SOLVER</div>
+          <div class="vault-desc">Solved 5 Hard-difficulty clashes</div>
+          <div class="vault-proof">✓ 5 solutions verified</div>
+          <div class="vault-xp">+1000 XP</div>
+        </div>
+
+        <div class="vault-card locked">
+          <div class="vault-icon-wrap" style="background:rgba(50,50,50,0.4);filter:grayscale(1);">☁️</div>
+          <div class="vault-name">CLOUD ARCH</div>
+          <div class="vault-desc">Complete 3 cloud challenges</div>
+          <div class="vault-locked-label">🔒 2/3 done</div>
+        </div>
+
+        <div class="vault-card locked">
+          <div class="vault-icon-wrap" style="background:rgba(50,50,50,0.4);filter:grayscale(1);">🛡</div>
+          <div class="vault-name">ML CORE</div>
+          <div class="vault-desc">Score 80%+ on 2 ML hunts</div>
+          <div class="vault-locked-label">🔒 1/2 done</div>
+        </div>
+
+        <div class="vault-card locked">
+          <span class="rarity-tag rarity-rare">RARE</span>
+          <div class="vault-icon-wrap" style="background:rgba(50,50,50,0.4);filter:grayscale(1);">🏗</div>
+          <div class="vault-name">SYSTEM DES</div>
+          <div class="vault-desc">Pass 3 system design reviews</div>
+          <div class="vault-locked-label">🔒 0/3 done</div>
+        </div>
+
+        <div class="vault-card locked">
+          <div class="vault-icon-wrap" style="background:rgba(50,50,50,0.4);filter:grayscale(1);">⚙️</div>
+          <div class="vault-name">DEVOPS</div>
+          <div class="vault-desc">Deploy 2 projects with CI/CD</div>
+          <div class="vault-locked-label">🔒 Not started</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+<script>
+function setMode(btn,m){document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function setTab(btn){btn.parentElement.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function doSignOut(){location.href='landing.html';}
+</script>
+</body>
+</html>

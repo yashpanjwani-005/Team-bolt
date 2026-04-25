@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Talent Hunt — Skill Hunt</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.hunt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.hunt-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;transition:all 0.2s;position:relative;}
+.hunt-card:hover{transform:translateY(-3px);border-color:var(--border2);}
+.hunt-card.featured{border-color:rgba(0,212,255,0.4);box-shadow:0 0 20px rgba(0,212,255,0.08);}
+.hunt-top{padding:16px;border-bottom:1px solid var(--border);}
+.hunt-company{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.hunt-logo{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;font-family:'Orbitron',monospace;}
+.hunt-cname{font-size:13px;font-weight:600;color:var(--text);}
+.hunt-role{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);}
+.hunt-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.hunt-desc{font-size:12px;color:var(--text2);line-height:1.5;}
+.hunt-bot{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;}
+.hunt-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.hunt-tag{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);padding:2px 8px;border-radius:2px;}
+.hunt-meta{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);}
+.hunt-banner{background:linear-gradient(135deg,rgba(0,212,255,0.08),rgba(0,255,136,0.05));border:1px solid rgba(0,212,255,0.2);border-radius:6px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
+.hunt-banner-title{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;color:var(--accent);margin-bottom:4px;}
+.hunt-banner-sub{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);}
+.hunt-status{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 10px;border-radius:2px;}
+.hunt-open{background:rgba(0,255,136,0.1);color:var(--accent2);border:1px solid rgba(0,255,136,0.3);}
+.hunt-closed{background:rgba(100,100,100,0.1);color:var(--text3);border:1px solid var(--border);}
+.hunt-featured-tag{position:absolute;top:0;right:0;background:var(--accent);color:var(--bg);font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;padding:3px 10px;border-radius:0 0 0 4px;}
+.prize-tag{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold);background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);padding:3px 10px;border-radius:2px;}
+.my-hunts-panel{background:var(--bg2);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.my-hunt-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);}
+.my-hunt-row:last-child{border-bottom:none;}
+.mh-progress{flex:1;}
+.mh-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.mh-bar-wrap{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.mh-bar{height:100%;border-radius:2px;}
+.mh-pct{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px;}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo-zone">
+      <div class="logo-mark"><span class="t1">TALENT</span> <span class="t3">HUNT</span></div>
+      <div class="logo-tagline">// SKILLS OVER DEGREES · v1.0</div>
+    </div>
+    <div class="user-card">
+      <div class="avatar">AK</div>
+      <div class="user-info">
+        <div class="user-name">Aryan Kumar</div>
+        <div class="user-rank">◆ RANK #142 · LVL 38</div>
+      </div>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="setMode(this,'dev')">Developer</button>
+      <button class="mode-btn" onclick="setMode(this,'hire')">Employer</button>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">// OVERVIEW</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">⊞</div> Dashboard</div>
+      <div class="nav-item" onclick="location.href='evolution.html'"><div class="nav-icon">📈</div> Evolution Curve</div>
+      <div class="nav-section">// COMPETE</div>
+      <div class="nav-item" onclick="location.href='codeclash.html'"><div class="nav-icon">⚔</div> Code Clash <span class="nav-badge">3 LIVE</span></div>
+      <div class="nav-item active"><div class="nav-icon">🎯</div> Skill Hunt</div>
+      <div class="nav-item" onclick="location.href='leaderboard.html'"><div class="nav-icon">🏆</div> Leaderboard</div>
+      <div class="nav-section">// GROW</div>
+      <div class="nav-item" onclick="location.href='mockbot.html'"><div class="nav-icon">🤖</div> Mock Bot</div>
+      <div class="nav-item" onclick="location.href='pathfinder.html'"><div class="nav-icon">💬</div> AI Pathfinder</div>
+      <div class="nav-item" onclick="location.href='jobsim.html'"><div class="nav-icon">🧪</div> Job Simulation <span class="nav-badge green">NEW</span></div>
+      <div class="nav-section">// PROFILE</div>
+      <div class="nav-item" onclick="location.href='trustresume.html'"><div class="nav-icon">🔗</div> Trust Resume</div>
+      <div class="nav-item" onclick="location.href='talentvault.html'"><div class="nav-icon">🏅</div> Talent Vault</div>
+      <div class="nav-item" onclick="location.href='autoapply.html'"><div class="nav-icon">🚀</div> Auto Apply <span class="nav-badge green">NEW</span></div>
+      <div class="nav-item" onclick="doSignOut()" style="margin-top:8px;"><div class="nav-icon">⎋</div> Sign Out</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="xp-label"><span>XP PROGRESS</span><span>6,800 / 10,000</span></div>
+      <div class="xp-bar"><div class="xp-fill"></div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-title">🎯 SKILL HUNT</div>
+      <div class="topbar-right">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="status-dot" style="background:var(--accent2);"></div>
+          <span class="status-text">14 ACTIVE HUNTS</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="ftab active" onclick="setTab(this)">ALL</button>
+          <button class="ftab" onclick="setTab(this)">OPEN</button>
+          <button class="ftab" onclick="setTab(this)">IN PROGRESS</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="hunt-banner">
+        <div>
+          <div class="hunt-banner-title">⚡ FEATURED HUNT — RAZORPAY SDE-2</div>
+          <div class="hunt-banner-sub">Full-stack challenge · 3 rounds · 48h deadline · 340 applicants competing</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="prize-tag">₹ 50K PACKAGE</span>
+          <button class="submit-btn" style="background:var(--accent);color:var(--bg);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;padding:8px 20px;border:none;border-radius:3px;cursor:pointer;">JOIN HUNT →</button>
+        </div>
+      </div>
+
+      <div class="hunt-grid">
+        <div class="hunt-card featured">
+          <div class="hunt-featured-tag">FEATURED</div>
+          <div class="hunt-top">
+            <div class="hunt-company">
+              <div class="hunt-logo" style="background:rgba(0,212,255,0.1);color:var(--accent);">RZ</div>
+              <div><div class="hunt-cname">Razorpay</div><div class="hunt-role">SDE-2 · Full Stack</div></div>
+            </div>
+            <div class="hunt-title">Full-Stack API Challenge</div>
+            <div class="hunt-desc">Build a payment retry API with idempotency support and rate limiting. Tests backend skills under pressure.</div>
+          </div>
+          <div class="hunt-bot">
+            <div class="hunt-tags"><span class="hunt-tag">Node.js</span><span class="hunt-tag">PostgreSQL</span><span class="hunt-tag">Redis</span></div>
+            <span class="hunt-status hunt-open">OPEN</span>
+          </div>
+        </div>
+
+        <div class="hunt-card">
+          <div class="hunt-top">
+            <div class="hunt-company">
+              <div class="hunt-logo" style="background:rgba(0,255,136,0.1);color:var(--accent2);">ZM</div>
+              <div><div class="hunt-cname">Zepto</div><div class="hunt-role">Frontend Engineer</div></div>
+            </div>
+            <div class="hunt-title">React Performance Hunt</div>
+            <div class="hunt-desc">Optimize a React app suffering render bottlenecks. Profile, diagnose, and fix. Score based on bundle size + render time.</div>
+          </div>
+          <div class="hunt-bot">
+            <div class="hunt-tags"><span class="hunt-tag">React</span><span class="hunt-tag">Webpack</span><span class="hunt-tag">Profiling</span></div>
+            <span class="hunt-status hunt-open">OPEN</span>
+          </div>
+        </div>
+
+        <div class="hunt-card">
+          <div class="hunt-top">
+            <div class="hunt-company">
+              <div class="hunt-logo" style="background:rgba(168,85,247,0.1);color:var(--accent4);">SW</div>
+              <div><div class="hunt-cname">Swiggy</div><div class="hunt-role">Data Engineer</div></div>
+            </div>
+            <div class="hunt-title">Real-Time ETL Pipeline</div>
+            <div class="hunt-desc">Design a streaming ETL to process 10M delivery events/day. Evaluated on schema design and throughput.</div>
+          </div>
+          <div class="hunt-bot">
+            <div class="hunt-tags"><span class="hunt-tag">Kafka</span><span class="hunt-tag">Spark</span><span class="hunt-tag">SQL</span></div>
+            <span class="hunt-status hunt-open">OPEN</span>
+          </div>
+        </div>
+
+        <div class="hunt-card">
+          <div class="hunt-top">
+            <div class="hunt-company">
+              <div class="hunt-logo" style="background:rgba(255,107,53,0.1);color:var(--accent3);">AT</div>
+              <div><div class="hunt-cname">Atlassian</div><div class="hunt-role">Backend Engineer</div></div>
+            </div>
+            <div class="hunt-title">Distributed Task Queue</div>
+            <div class="hunt-desc">Build a fault-tolerant task queue with retries, priority support, and dead-letter queues from scratch.</div>
+          </div>
+          <div class="hunt-bot">
+            <div class="hunt-tags"><span class="hunt-tag">Python</span><span class="hunt-tag">Celery</span><span class="hunt-tag">RabbitMQ</span></div>
+            <span class="hunt-status hunt-open">OPEN</span>
+          </div>
+        </div>
+
+        <div class="hunt-card">
+          <div class="hunt-top">
+            <div class="hunt-company">
+              <div class="hunt-logo" style="background:rgba(255,215,0,0.1);color:var(--gold);">GG</div>
+              <div><div class="hunt-cname">Games24x7</div><div class="hunt-role">ML Engineer</div></div>
+            </div>
+            <div class="hunt-title">Churn Prediction Model</div>
+            <div class="hunt-desc">Given 6 months of player data, predict churn with >85% accuracy. Feature engineering and model explainability required.</div>
+          </div>
+          <div class="hunt-bot">
+            <div class="hunt-tags"><span class="hunt-tag">Python</span><span class="hunt-tag">XGBoost</span><span class="hunt-tag">SHAP</span></div>
+            <span class="hunt-status hunt-open">OPEN</span>
+          </div>
+        </div>
+
+        <div class="hunt-card" style="opacity:0.6;">
+          <div class="hunt-top">
+            <div class="hunt-company">
+              <div class="hunt-logo" style="background:rgba(100,100,100,0.1);color:var(--text3);">IN</div>
+              <div><div class="hunt-cname">Infosys</div><div class="hunt-role">SDE-1</div></div>
+            </div>
+            <div class="hunt-title">Monolith to Microservices</div>
+            <div class="hunt-desc">Refactor a given monolith into 3 microservices. Design APIs and document inter-service communication.</div>
+          </div>
+          <div class="hunt-bot">
+            <div class="hunt-tags"><span class="hunt-tag">Java</span><span class="hunt-tag">Spring</span><span class="hunt-tag">Docker</span></div>
+            <span class="hunt-status hunt-closed">CLOSED</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY ACTIVE HUNTS -->
+      <div class="my-hunts-panel">
+        <div class="panel-head">
+          <div class="panel-title"><span>//</span> MY ACTIVE HUNTS</div>
+          <button class="panel-action">VIEW ALL</button>
+        </div>
+        <div>
+          <div class="my-hunt-row">
+            <div style="font-size:18px;">🎯</div>
+            <div class="mh-progress">
+              <div class="mh-title">Razorpay — Full-Stack API Challenge</div>
+              <div class="mh-bar-wrap"><div class="mh-bar" style="width:65%;background:var(--accent);"></div></div>
+              <div class="mh-pct">Round 2/3 · 65% complete · 22h left</div>
+            </div>
+            <button class="panel-action">CONTINUE →</button>
+          </div>
+          <div class="my-hunt-row">
+            <div style="font-size:18px;">🎯</div>
+            <div class="mh-progress">
+              <div class="mh-title">Zepto — React Performance Hunt</div>
+              <div class="mh-bar-wrap"><div class="mh-bar" style="width:30%;background:var(--accent2);"></div></div>
+              <div class="mh-pct">Round 1/2 · 30% complete · 44h left</div>
+            </div>
+            <button class="panel-action">CONTINUE →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+<script>
+function setMode(btn,m){document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function setTab(btn){btn.parentElement.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function doSignOut(){location.href='landing.html';}
+</script>
+</body>
+</html>

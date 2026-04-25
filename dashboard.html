@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Talent Hunt — Dashboard</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="scanline"></div>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="logo-zone">
+      <div class="logo-mark"><span class="t1">TALENT</span> <span class="t3">HUNT</span></div>
+      <div class="logo-tagline">// SKILLS OVER DEGREES · v1.0</div>
+    </div>
+
+    <div class="user-card">
+      <div class="avatar" id="user-avatar">AK</div>
+      <div class="user-info">
+        <div class="user-name" id="user-name">Aryan Kumar</div>
+        <div class="user-rank">◆ RANK #142 · LVL 38</div>
+      </div>
+    </div>
+
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="setMode(this,'dev')">Developer</button>
+      <button class="mode-btn" onclick="setMode(this,'hire')">Employer</button>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">// OVERVIEW</div>
+      <div class="nav-item active"><div class="nav-icon">⊞</div> Dashboard</div>
+      <div class="nav-item" onclick="location.href='evolution.html'"><div class="nav-icon">📈</div> Evolution Curve</div>
+      <div class="nav-section">// COMPETE</div>
+      <div class="nav-item" onclick="location.href='codeclash.html'"><div class="nav-icon">⚔</div> Code Clash <span class="nav-badge">3 LIVE</span></div>
+      <div class="nav-item" onclick="location.href='skillhunt.html'"><div class="nav-icon">🎯</div> Skill Hunt</div>
+      <div class="nav-item" onclick="location.href='leaderboard.html'"><div class="nav-icon">🏆</div> Leaderboard</div>
+      <div class="nav-section">// GROW</div>
+      <div class="nav-item" onclick="location.href='mockbot.html'"><div class="nav-icon">🤖</div> Mock Bot</div>
+      <div class="nav-item" onclick="location.href='pathfinder.html'"><div class="nav-icon">💬</div> AI Pathfinder</div>
+      <div class="nav-item" onclick="location.href='jobsim.html'"><div class="nav-icon">🧪</div> Job Simulation <span class="nav-badge green">NEW</span></div>
+      <div class="nav-section">// PROFILE</div>
+      <div class="nav-item" onclick="location.href='trustresume.html'"><div class="nav-icon">🔗</div> Trust Resume</div>
+      <div class="nav-item" onclick="location.href='talentvault.html'"><div class="nav-icon">🏅</div> Talent Vault</div>
+      <div class="nav-item" onclick="location.href='autoapply.html'"><div class="nav-icon">🚀</div> Auto Apply <span class="nav-badge green">NEW</span></div>
+      <div class="nav-item" onclick="doSignOut()" style="margin-top:8px;"><div class="nav-icon">⎋</div> Sign Out</div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="xp-label"><span>XP PROGRESS</span><span>6,800 / 10,000</span></div>
+      <div class="xp-bar"><div class="xp-fill"></div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-title">// COMMAND CENTER</div>
+      <div class="topbar-right">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="status-dot"></div>
+          <span class="status-text">SYSTEM ONLINE</span>
+        </div>
+        <button class="notif-btn">⚡ 3 ALERTS</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="blind-banner" id="blind-banner" style="display:none;">
+        <div style="font-size:20px;">🕶</div>
+        <div style="flex:1;">
+          <div class="blind-title">BLIND HIRING MODE — ACTIVE</div>
+          <div class="blind-sub">Degrees &amp; universities hidden · Skill-first evaluation enabled</div>
+        </div>
+        <button class="blind-toggle">DISABLE</button>
+      </div>
+
+      <div class="stat-strip">
+        <div class="stat-card" onclick="location.href='evolution.html'" style="cursor:pointer;"><div class="stat-label">Trust Score</div><div class="stat-value">94.2</div><div class="stat-sub">Expert verified</div><div class="stat-delta up">▲ +2.1 this week</div></div>
+        <div class="stat-card" onclick="location.href='codeclash.html'" style="cursor:pointer;"><div class="stat-label">Clash Wins</div><div class="stat-value">47</div><div class="stat-sub">Win rate 71%</div><div class="stat-delta up">▲ +5 this month</div></div>
+        <div class="stat-card" onclick="location.href='evolution.html'" style="cursor:pointer;"><div class="stat-label">Growth Score</div><div class="stat-value">+68%</div><div class="stat-sub">vs last quarter</div><div class="stat-delta up">▲ Top 12%</div></div>
+        <div class="stat-card" onclick="location.href='talentvault.html'" style="cursor:pointer;"><div class="stat-label">Badges Earned</div><div class="stat-value">12</div><div class="stat-sub">3 pending</div><div class="stat-delta up">▲ 2 new</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title" onclick="location.href='evolution.html'" style="cursor:pointer;"><span>//</span> EVOLUTION CURVE</div>
+            <div style="display:flex;gap:6px;">
+              <button class="ftab active" onclick="setTab(this)">WEEK</button>
+              <button class="ftab" onclick="setTab(this)">MONTH</button>
+              <button class="ftab" onclick="setTab(this)">YEAR</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <svg class="evo" viewBox="0 0 380 110">
+              <defs>
+                <linearGradient id="evoGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.25"/>
+                  <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <line x1="0" y1="90" x2="380" y2="90" stroke="#1e3a4a" stroke-width="0.5"/>
+              <line x1="0" y1="60" x2="380" y2="60" stroke="#1e3a4a" stroke-width="0.5"/>
+              <line x1="0" y1="30" x2="380" y2="30" stroke="#1e3a4a" stroke-width="0.5"/>
+              <path d="M0,80 C40,75 80,65 120,55 C160,45 200,50 240,38 C280,26 320,20 380,10 L380,90 L0,90 Z" fill="url(#evoGrad)"/>
+              <path d="M0,80 C40,75 80,65 120,55 C160,45 200,50 240,38 C280,26 320,20 380,10" fill="none" stroke="#00d4ff" stroke-width="2"/>
+              <circle cx="120" cy="55" r="3" fill="#00d4ff"/>
+              <circle cx="240" cy="38" r="3" fill="#00d4ff"/>
+              <circle cx="380" cy="10" r="4" fill="#00ff88"/>
+              <text x="2"   y="104" fill="#3a6070" font-family="'Share Tech Mono'" font-size="9">MON</text>
+              <text x="115" y="104" fill="#3a6070" font-family="'Share Tech Mono'" font-size="9">WED</text>
+              <text x="233" y="104" fill="#3a6070" font-family="'Share Tech Mono'" font-size="9">FRI</text>
+              <text x="358" y="104" fill="#00ff88" font-family="'Share Tech Mono'" font-size="9">NOW</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title" onclick="location.href='codeclash.html'" style="cursor:pointer;"><span>//</span> CODE CLASH</div>
+            <button class="panel-action" onclick="location.href='codeclash.html'">+ CREATE</button>
+          </div>
+          <div class="panel-body">
+            <div class="clash-list">
+              <div class="clash-item" onclick="location.href='codeclash.html'" style="cursor:pointer;"><div class="clash-status live"></div><div class="clash-info"><div class="clash-name">Binary Tree Max Path</div><div class="clash-meta">4 players · 12:34 left · Hard</div></div><div class="clash-badge live">LIVE</div></div>
+              <div class="clash-item" onclick="location.href='codeclash.html'" style="cursor:pointer;"><div class="clash-status open"></div><div class="clash-info"><div class="clash-name">DP Coin Change Variant</div><div class="clash-meta">2/6 joined · Starts in 8min</div></div><div class="clash-badge open">OPEN</div></div>
+              <div class="clash-item" onclick="location.href='codeclash.html'" style="cursor:pointer;"><div class="clash-status open"></div><div class="clash-info"><div class="clash-name">React Hook Challenge #12</div><div class="clash-meta">Private · Employer: Razorpay</div></div><div class="clash-badge open">INVITED</div></div>
+              <div class="clash-item" onclick="location.href='codeclash.html'" style="cursor:pointer;"><div class="clash-status done"></div><div class="clash-info"><div class="clash-name">Graph BFS Shortest Path</div><div class="clash-meta">You won · +240 XP · 2h ago</div></div><div class="clash-badge done">DONE</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title" onclick="location.href='leaderboard.html'" style="cursor:pointer;"><span>//</span> LEADERBOARD</div>
+            <div style="display:flex;gap:4px;">
+              <button class="ftab active" onclick="setTab(this)">GROWTH</button>
+              <button class="ftab" onclick="setTab(this)">TRUST</button>
+              <button class="ftab" onclick="setTab(this)">STREAK</button>
+            </div>
+          </div>
+          <div class="panel-body" style="padding:12px 16px;">
+            <div class="lb-row"><div class="lb-rank" style="color:var(--gold);">1</div><div class="lb-avatar" style="background:rgba(255,215,0,0.1);color:#ffd700;">SK</div><div class="lb-name">Sneha Kapoor</div><div class="lb-score">98.4</div><span style="font-size:10px;color:var(--accent2);margin-left:6px;">▲</span></div>
+            <div class="lb-row"><div class="lb-rank" style="color:#aaa;">2</div><div class="lb-avatar" style="background:rgba(170,170,170,0.1);color:#aaa;">RV</div><div class="lb-name">Rahul Verma</div><div class="lb-score">95.1</div><span style="font-size:10px;color:var(--accent2);margin-left:6px;">▲</span></div>
+            <div class="lb-row"><div class="lb-rank" style="color:#cd7f32;">3</div><div class="lb-avatar" style="background:rgba(205,127,50,0.1);color:#cd7f32;">PM</div><div class="lb-name">Priya Mehta</div><div class="lb-score">91.7</div><span style="font-size:10px;color:var(--danger);margin-left:6px;">▼</span></div>
+            <div class="lb-row"><div class="lb-rank" style="color:var(--text3);">4</div><div class="lb-avatar" style="background:rgba(0,212,255,0.1);color:var(--accent);" id="lb-you-avatar">AK</div><div class="lb-name" id="lb-you-name">Aryan Kumar <span style="font-size:9px;color:var(--accent);font-family:'Share Tech Mono'">[YOU]</span></div><div class="lb-score">88.3</div><span style="font-size:10px;color:var(--accent2);margin-left:6px;">▲</span></div>
+            <div class="lb-row"><div class="lb-rank" style="color:var(--text3);">5</div><div class="lb-avatar" style="background:rgba(168,85,247,0.1);color:var(--accent4);">ND</div><div class="lb-name">Nidhi Das</div><div class="lb-score">85.9</div><span style="font-size:10px;color:var(--accent2);margin-left:6px;">▲</span></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title" onclick="location.href='talentvault.html'" style="cursor:pointer;"><span>//</span> TALENT VAULT</div>
+            <button class="panel-action" onclick="location.href='talentvault.html'">VIEW ALL</button>
+          </div>
+          <div class="panel-body">
+            <div class="badge-grid">
+              <div class="badge-item earned" onclick="location.href='talentvault.html'" style="cursor:pointer;"><div class="badge-icon earned-icon" style="background:rgba(0,212,255,0.1);">⚡</div><div class="badge-name">React Pro</div></div>
+              <div class="badge-item earned" onclick="location.href='talentvault.html'" style="cursor:pointer;"><div class="badge-icon earned-icon" style="background:rgba(0,255,136,0.1);">🌲</div><div class="badge-name">DS Expert</div></div>
+              <div class="badge-item earned" onclick="location.href='talentvault.html'" style="cursor:pointer;"><div class="badge-icon earned-icon" style="background:rgba(255,107,53,0.1);">🔥</div><div class="badge-name">10-Streak</div></div>
+              <div class="badge-item earned" onclick="location.href='talentvault.html'" style="cursor:pointer;"><div class="badge-icon earned-icon" style="background:rgba(168,85,247,0.1);">🔬</div><div class="badge-name">Verified</div></div>
+              <div class="badge-item" onclick="location.href='talentvault.html'" style="cursor:pointer;"><div class="badge-icon" style="background:rgba(50,50,50,0.5);filter:grayscale(1);">☁️</div><div class="badge-name">Cloud Arch</div></div>
+              <div class="badge-item" onclick="location.href='talentvault.html'" style="cursor:pointer;"><div class="badge-icon" style="background:rgba(50,50,50,0.5);filter:grayscale(1);">🛡</div><div class="badge-name">ML Core</div></div>
+              <div class="badge-item" onclick="location.href='talentvault.html'" style="cursor:pointer;"><div class="badge-icon" style="background:rgba(50,50,50,0.5);filter:grayscale(1);">🏗</div><div class="badge-name">System Des</div></div>
+              <div class="badge-item" onclick="location.href='talentvault.html'" style="cursor:pointer;"><div class="badge-icon" style="background:rgba(50,50,50,0.5);filter:grayscale(1);">⚙️</div><div class="badge-name">DevOps</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title" onclick="location.href='mockbot.html'" style="cursor:pointer;"><span>//</span> MOCK BOT</div><button class="panel-action" onclick="location.href='mockbot.html'">OPEN →</button></div>
+          <div class="panel-body">
+            <div class="mockbot-input">
+              <input type="text" id="mock-input" placeholder="e.g. SDE-2 at Google..." onkeydown="if(event.key==='Enter')genQ()"/>
+              <button onclick="genQ()">RUN</button>
+            </div>
+            <div id="mock-questions">
+              <div class="mock-question" onclick="location.href='mockbot.html'" style="cursor:pointer;"><div class="mock-q-label">Q1 · SYSTEM DESIGN</div><div class="mock-q-text">Design a rate limiter for a distributed API gateway handling 10M req/day.</div><span class="mock-diff hard">HARD</span></div>
+              <div class="mock-question" onclick="location.href='mockbot.html'" style="cursor:pointer;"><div class="mock-q-label">Q2 · BEHAVIORAL</div><div class="mock-q-text">Tell me about a time you resolved a conflict under a tight deadline.</div><span class="mock-diff med">MEDIUM</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title" onclick="location.href='jobsim.html'" style="cursor:pointer;"><span>//</span> JOB SIMULATION</div>
+            <span style="font-family:'Share Tech Mono';font-size:9px;color:var(--accent3);border:1px solid rgba(255,107,53,0.3);padding:2px 8px;border-radius:2px;">● LIVE</span>
+          </div>
+          <div class="panel-body" style="padding:8px;">
+            <div class="sim-wrap">
+              <div class="sim-header">
+                <div class="sim-dot" style="background:#ff5f57;"></div>
+                <div class="sim-dot" style="background:#febc2e;"></div>
+                <div class="sim-dot" style="background:#28c840;"></div>
+                <div class="sim-title">PROD · E-COMMERCE SIM</div>
+              </div>
+              <div class="sim-terminal" id="sim-t">
+                <div class="line-info">[09:41] Sprint: Add cart discount feature</div>
+                <div class="line-warn">[09:43] ⚠ CLIENT: Need dark mode by EOD</div>
+                <div class="line-err">[09:47] ✗ ERROR: DB conn timeout</div>
+                <div class="line-cmd">[09:48] $ Awaiting your response...</div>
+              </div>
+            </div>
+            <button onclick="location.href='jobsim.html'" style="width:100%;margin-top:10px;background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.3);color:var(--accent3);font-family:'Share Tech Mono';font-size:10px;padding:7px;border-radius:3px;cursor:pointer;letter-spacing:1px;">ENTER SIMULATION ↗</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title" onclick="location.href='trustresume.html'" style="cursor:pointer;"><span>//</span> TRUST RESUME</div>
+            <button class="panel-action" onclick="location.href='trustresume.html'">SHARE</button>
+          </div>
+          <div class="panel-body">
+            <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-bottom:10px;letter-spacing:1px;">TAP SKILL → VIEW LINKED WORK</div>
+            <div class="skill-tags">
+              <div class="skill-tag" onclick="location.href='trustresume.html'" style="cursor:pointer;"><div class="skill-dot" style="background:var(--accent2);"></div><div class="skill-tag-name">React</div><div class="skill-tag-count">14 proofs</div></div>
+              <div class="skill-tag" onclick="location.href='trustresume.html'" style="cursor:pointer;"><div class="skill-dot" style="background:var(--accent2);"></div><div class="skill-tag-name">Node.js</div><div class="skill-tag-count">9 proofs</div></div>
+              <div class="skill-tag" onclick="location.href='trustresume.html'" style="cursor:pointer;"><div class="skill-dot" style="background:var(--accent2);"></div><div class="skill-tag-name">DSA</div><div class="skill-tag-count">47 clashes</div></div>
+              <div class="skill-tag" onclick="location.href='trustresume.html'" style="cursor:pointer;"><div class="skill-dot" style="background:var(--accent3);"></div><div class="skill-tag-name">System Design</div><div class="skill-tag-count">3 proofs</div></div>
+              <div class="skill-tag" onclick="location.href='trustresume.html'" style="cursor:pointer;"><div class="skill-dot" style="background:var(--text3);"></div><div class="skill-tag-name">PostgreSQL</div><div class="skill-tag-count">5 proofs</div></div>
+              <div class="skill-tag" onclick="location.href='trustresume.html'" style="cursor:pointer;"><div class="skill-dot" style="background:var(--accent2);"></div><div class="skill-tag-name">TypeScript</div><div class="skill-tag-count">6 proofs</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+<script>
+// ── Dashboard helpers (globally available, not inside module scope) ──
+function setMode(btn, mode) {
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const banner = document.getElementById('blind-banner');
+  if (banner) banner.style.display = mode === 'hire' ? 'flex' : 'none';
+}
+
+function setTab(btn) {
+  btn.parentElement.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function doSignOut() {
+  // Try Firebase signOut if available, then redirect
+  if (window._firebaseAuth) {
+    window._firebaseAuth.signOut().then(() => { location.href = 'landing.html'; });
+  } else {
+    location.href = 'landing.html';
+  }
+}
+
+function genQ() {
+  const val = document.getElementById('mock-input').value.trim();
+  if (!val) { location.href = 'mockbot.html'; return; }
+  location.href = 'mockbot.html?q=' + encodeURIComponent(val);
+}
+
+// Countdown timer for clash preview widget
+let _t = 8 * 60 + 42;
+setInterval(() => {
+  if (_t <= 0) _t = 15 * 60;
+  _t--;
+  const m = Math.floor(_t / 60), s = _t % 60;
+  const el = document.getElementById('clash-timer');
+  if (el) el.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+}, 1000);
+
+// Simulation terminal ticker
+const _simLines = [
+  '<div class="line-ok">[09:52] ✓ Hotfix deployed · DB restored</div>',
+  '<div class="line-warn">[09:55] ⚠ New req: Add payment retry logic</div>',
+  '<div class="line-cmd">[09:56] $ New simulation event incoming...</div>'
+];
+let _simIdx = 0;
+setInterval(() => {
+  if (_simIdx < _simLines.length) {
+    const term = document.getElementById('sim-t');
+    if (term) { term.insertAdjacentHTML('beforeend', _simLines[_simIdx++]); term.scrollTop = term.scrollHeight; }
+  }
+}, 3500);
+</script>
+</body>
+</html>

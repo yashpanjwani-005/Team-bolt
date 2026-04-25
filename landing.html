@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Talent Hire — Developer Arena</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="scanline"></div>
+
+<nav class="main-nav">
+  <div class="nav-logo logo-mark"><span class="t1">TALENT </span><span class="t2">HUNT</span></div>
+  <div class="nav-links">
+    <span class="nav-link">Code Clash</span>
+    <span class="nav-link">Leaderboard</span>
+    <span class="nav-link">Mock Bot</span>
+    <span class="nav-link">Talent Vault</span>
+    <span class="nav-link">Job Simulation</span>
+  </div>
+  <div class="nav-right">
+    <button class="nav-btn ghost" onclick="goToLogin()">Sign In</button>
+    <button class="nav-btn primary" onclick="goToLogin()">Get Started</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge"><div class="hero-badge-dot"></div> DEVELOPER ARENA — SKILLS OVER DEGREES</div>
+    <div class="hero-title">
+      <div class="line1">PROVE YOUR</div>
+      <div class="line2">SKILLS.</div>
+      <div class="line3">GET HIRED.</div>
+    </div>
+    <div class="hero-sub">No degree filter. No resume bias. Just raw code, real challenges, and verified skill badges that speak louder than any certificate.</div>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="goToLogin()">ENTER THE ARENA</button>
+      <button class="btn-secondary">WATCH DEMO</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val">12K+</div><div class="hstat-label">DEVELOPERS</div></div>
+      <div class="hstat"><div class="hstat-val">3.4K</div><div class="hstat-label">CLASHES DAILY</div></div>
+      <div class="hstat"><div class="hstat-val">840+</div><div class="hstat-label">HIRED VIA SKILLS</div></div>
+      <div class="hstat"><div class="hstat-val">98%</div><div class="hstat-label">TRUST SCORE AVG</div></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="250" cy="250" r="200" stroke="#00d4ff" stroke-width="0.5"/>
+      <circle cx="250" cy="250" r="150" stroke="#00d4ff" stroke-width="0.5"/>
+      <circle cx="250" cy="250" r="100" stroke="#00ff88" stroke-width="0.5"/>
+      <circle cx="250" cy="250" r="50"  stroke="#00d4ff" stroke-width="0.5"/>
+      <line x1="50" y1="250" x2="450" y2="250" stroke="#00d4ff" stroke-width="0.5"/>
+      <line x1="250" y1="50" x2="250" y2="450" stroke="#00d4ff" stroke-width="0.5"/>
+      <line x1="108" y1="108" x2="392" y2="392" stroke="#00d4ff" stroke-width="0.3"/>
+      <line x1="392" y1="108" x2="108" y2="392" stroke="#00d4ff" stroke-width="0.3"/>
+      <circle cx="250" cy="50"  r="4" fill="#00d4ff"/>
+      <circle cx="250" cy="450" r="4" fill="#00d4ff"/>
+      <circle cx="50"  cy="250" r="4" fill="#00d4ff"/>
+      <circle cx="450" cy="250" r="4" fill="#00d4ff"/>
+      <circle cx="250" cy="250" r="8" fill="#00ff88"/>
+    </svg>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="section-label">// FEATURES</div>
+  <div class="section-title">EVERYTHING YOU NEED TO <span>WIN</span></div>
+  <div class="section-sub">Built for developers who want to show — not just tell — what they can do.</div>
+  <div class="features-grid">
+    <div class="feat-card"><span class="feat-icon">⚔</span><div class="feat-title">Code Clash</div><div class="feat-desc">Real-time coding battles against other developers. Timed challenges, live scoring, and profile boosts for winners. Employers watch live.</div><span class="feat-tag">LIVE BATTLES</span></div>
+    <div class="feat-card"><span class="feat-icon">🔗</span><div class="feat-title">Trust Resume</div><div class="feat-desc">Every skill on your profile links directly to proof — clash wins, completed projects, verified tests. No more empty claims.</div><span class="feat-tag">VERIFIED</span></div>
+    <div class="feat-card"><span class="feat-icon">📈</span><div class="feat-title">Evolution Curve</div><div class="feat-desc">Visualize your growth over time. Challenges solved, wins, consistency and improvement score — all on one graph.</div><span class="feat-tag">ANALYTICS</span></div>
+    <div class="feat-card"><span class="feat-icon">🤖</span><div class="feat-title">Mock Bot</div><div class="feat-desc">Tell it your target role and company. Get AI-generated interview questions aligned to that exact position.</div><span class="feat-tag">AI POWERED</span></div>
+    <div class="feat-card"><span class="feat-icon">🧪</span><div class="feat-title">Job Simulation</div><div class="feat-desc">Real-world project scenarios with chaotic client demands, production bugs, and tight deadlines. Experience before the job.</div><span class="feat-tag">IMMERSIVE</span></div>
+    <div class="feat-card"><span class="feat-icon">🏅</span><div class="feat-title">Talent Vault</div><div class="feat-desc">Earn skill badges by completing verified courses, challenges, and expert-reviewed tests.</div><span class="feat-tag">BADGES</span></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div style="text-align:center;margin-bottom:48px;">
+    <div class="section-label" style="text-align:center;">// HOW IT WORKS</div>
+    <div class="section-title" style="text-align:center;">FROM ZERO TO <span>HIRED</span></div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><div class="step-title">Create Profile</div><div class="step-desc">Sign up as a developer. No degree required, no filters.</div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-title">Compete & Build</div><div class="step-desc">Join Code Clashes, complete Skill Hunts, earn verified badges.</div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-title">Get Verified</div><div class="step-desc">Experts review your submissions. Your Trust Score rises.</div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-title">Get Hired</div><div class="step-desc">Employers find you through Skill Hunt leaderboards. No degree filter.</div></div>
+  </div>
+</section>
+
+<!-- CLASH PREVIEW -->
+<section style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div style="text-align:center;margin-bottom:40px;">
+    <div class="section-label" style="text-align:center;">// LIVE PREVIEW</div>
+    <div class="section-title" style="text-align:center;">INSIDE A <span>CODE CLASH</span></div>
+  </div>
+  <div class="clash-preview">
+    <div class="clash-top">
+      <div class="clash-dots">
+        <div class="clash-dot" style="background:#ff5f57;"></div>
+        <div class="clash-dot" style="background:#febc2e;"></div>
+        <div class="clash-dot" style="background:#28c840;"></div>
+      </div>
+      <div style="text-align:center;">
+        <div class="clash-timer" id="clash-timer">08:42</div>
+        <div class="clash-timer-label">TIME REMAINING</div>
+      </div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent2);background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.2);padding:4px 10px;border-radius:2px;">● LIVE</div>
+    </div>
+    <div class="clash-vs">
+      <div class="clash-player"><div class="clash-player-name">ARYAN K.</div><div class="clash-player-score">3</div><div class="clash-player-status">● CODING...</div></div>
+      <div class="clash-vs-badge">VS</div>
+      <div class="clash-player"><div class="clash-player-name">SNEHA M.</div><div class="clash-player-score" style="color:var(--accent);">2</div><div class="clash-player-status" style="color:var(--accent);">● TESTING</div></div>
+    </div>
+    <div class="clash-code">
+      <div><span class="code-line-num">1</span><span class="kw">function</span> <span class="fn">maxPathSum</span>(root) {</div>
+      <div><span class="code-line-num">2</span>&nbsp;&nbsp;<span class="kw">let</span> maxSum = <span class="str">-Infinity</span>;</div>
+      <div><span class="code-line-num">3</span>&nbsp;&nbsp;<span class="kw">const</span> <span class="fn">dfs</span> = (node) => {</div>
+      <div><span class="code-line-num">4</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> (!node) <span class="kw">return</span> <span class="str">0</span>; <span class="cmt">// base case</span></div>
+      <div><span class="code-line-num">5</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">const</span> left = Math.<span class="fn">max</span>(<span class="fn">dfs</span>(node.left), <span class="str">0</span>);</div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERBOARD PREVIEW -->
+<section>
+  <div style="text-align:center;margin-bottom:40px;">
+    <div class="section-label" style="text-align:center;">// RANKINGS</div>
+    <div class="section-title" style="text-align:center;">GLOBAL <span>LEADERBOARD</span></div>
+  </div>
+  <div class="lb-preview">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+      <div class="lb-header"><span>#</span><span>PLAYER</span><span style="text-align:center;">WINS</span><span style="text-align:center;">TRUST</span><span style="text-align:center;">GROWTH</span></div>
+      <div class="lb-row-p"><div class="lb-rk" style="color:var(--gold);">1</div><div class="lb-pl"><div class="lb-av" style="background:rgba(255,215,0,0.1);color:var(--gold);">SK</div><div><div class="lb-pname">Sneha Kapoor</div><div class="lb-psub">React · DSA · System Design</div></div></div><div class="lb-val" style="color:var(--accent2);">142</div><div class="lb-val" style="color:var(--accent);">98.4</div><div class="lb-val" style="color:var(--accent2);">+84%</div></div>
+      <div class="lb-row-p"><div class="lb-rk" style="color:#aaa;">2</div><div class="lb-pl"><div class="lb-av" style="background:rgba(170,170,170,0.1);color:#aaa;">RV</div><div><div class="lb-pname">Rahul Verma</div><div class="lb-psub">Node.js · DevOps · Python</div></div></div><div class="lb-val" style="color:var(--accent2);">119</div><div class="lb-val" style="color:var(--accent);">95.1</div><div class="lb-val" style="color:var(--accent2);">+71%</div></div>
+      <div class="lb-row-p"><div class="lb-rk" style="color:#cd7f32;">3</div><div class="lb-pl"><div class="lb-av" style="background:rgba(205,127,50,0.1);color:#cd7f32;">PM</div><div><div class="lb-pname">Priya Mehta</div><div class="lb-psub">ML · Python · TensorFlow</div></div></div><div class="lb-val" style="color:var(--accent2);">98</div><div class="lb-val" style="color:var(--accent);">91.7</div><div class="lb-val" style="color:var(--accent2);">+65%</div></div>
+      <div class="lb-row-p you"><div class="lb-rk" style="color:var(--text3);">142</div><div class="lb-pl"><div class="lb-av" style="background:rgba(0,212,255,0.12);color:var(--accent);">AK</div><div><div class="lb-pname">Aryan Kumar <span style="font-size:9px;color:var(--accent);font-family:'Share Tech Mono'">[YOU]</span></div><div class="lb-psub">React · DSA · TypeScript</div></div></div><div class="lb-val" style="color:var(--accent2);">47</div><div class="lb-val" style="color:var(--accent);">88.3</div><div class="lb-val" style="color:var(--accent2);">+68%</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-title">READY TO <span>HUNT</span>?</div>
+  <div class="cta-sub">Join 12,000+ developers who got hired on skill, not a degree.</div>
+  <div class="cta-actions">
+    <button class="btn-primary" onclick="goToLogin()">CREATE FREE ACCOUNT</button>
+    <button class="btn-secondary">EXPLORE CHALLENGES</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">TALENT <span>HUNT</span></div>
+  <div class="footer-links">
+    <span class="footer-link">About</span>
+    <span class="footer-link">Careers</span>
+    <span class="footer-link">Blog</span>
+    <span class="footer-link">Privacy</span>
+    <span class="footer-link">Terms</span>
+  </div>
+  <div class="footer-copy">// © 2025 TALENT HUNT</div>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

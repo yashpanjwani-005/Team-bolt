@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Talent Hunt — Auto Apply</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+/* ── Layout ── */
+.aa-grid { display: grid; grid-template-columns: 1fr 380px; gap: 20px; }
+
+/* ── Form card ── */
+.aa-form-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.aa-form-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.aa-form-title { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--text2); }
+.aa-form-body { padding: 20px; display: flex; flex-direction: column; gap: 18px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text3); letter-spacing: 1px; }
+.form-input, .form-select, .form-textarea {
+  background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+  font-family: 'Share Tech Mono', monospace; font-size: 12px;
+  padding: 10px 14px; border-radius: 3px; outline: none; transition: border-color 0.2s;
+  width: 100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text3); }
+.form-textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+.form-select { cursor: pointer; }
+
+/* Skill tags input */
+.skill-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.skill-tag {
+  background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.25);
+  color: var(--accent); font-family: 'Share Tech Mono', monospace; font-size: 10px;
+  padding: 3px 10px; border-radius: 12px; display: flex; align-items: center; gap: 6px; cursor: default;
+}
+.skill-tag-remove { cursor: pointer; color: var(--text3); font-size: 12px; line-height: 1; }
+.skill-tag-remove:hover { color: var(--danger); }
+.skill-add-row { display: flex; gap: 8px; }
+.skill-add-input { flex: 1; background: var(--bg3); border: 1px solid var(--border); color: var(--text); font-family: 'Share Tech Mono', monospace; font-size: 11px; padding: 8px 12px; border-radius: 3px; outline: none; }
+.skill-add-input:focus { border-color: var(--accent); }
+.skill-add-btn { background: rgba(0,212,255,0.1); border: 1px solid var(--accent); color: var(--accent); font-family: 'Orbitron', monospace; font-size: 10px; padding: 8px 14px; border-radius: 3px; cursor: pointer; transition: all 0.2s; }
+.skill-add-btn:hover { background: var(--accent); color: var(--bg); }
+
+/* Section divider */
+.section-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+
+/* Preferences checkboxes */
+.pref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pref-item { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 10px; border: 1px solid var(--border); border-radius: 3px; transition: all 0.15s; }
+.pref-item:hover { border-color: var(--border2); }
+.pref-item.selected { border-color: rgba(0,212,255,0.4); background: rgba(0,212,255,0.05); }
+.pref-check { width: 14px; height: 14px; border: 1px solid var(--border2); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0; }
+.pref-item.selected .pref-check { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.pref-text { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text2); }
+
+/* Submit button */
+.apply-btn {
+  background: linear-gradient(135deg, var(--accent), #0090cc);
+  border: none; color: var(--bg); font-family: 'Orbitron', monospace; font-size: 13px;
+  font-weight: 700; padding: 14px 20px; border-radius: 4px; cursor: pointer;
+  transition: all 0.2s; letter-spacing: 1px; width: 100%;
+}
+.apply-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,212,255,0.3); }
+.apply-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* ── Right panel ── */
+.aa-right { display: flex; flex-direction: column; gap: 14px; }
+.aa-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.aa-panel-head { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.aa-panel-title { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--text2); }
+.aa-panel-body { padding: 14px 16px; }
+
+/* Vacancy list */
+.vacancy-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s;
+}
+.vacancy-row:last-child { border-bottom: none; }
+.vacancy-row:hover { background: rgba(0,212,255,0.03); margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+.vacancy-logo { width: 32px; height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.vacancy-info { flex: 1; }
+.vacancy-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.vacancy-company { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text3); }
+.vacancy-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+.vtag { font-family: 'Share Tech Mono', monospace; font-size: 8px; color: var(--text3); background: var(--bg3); border: 1px solid var(--border); padding: 1px 6px; border-radius: 2px; }
+.vacancy-match { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; flex-shrink: 0; align-self: center; }
+
+/* Activity log */
+.activity-row { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.activity-row:last-child { border-bottom: none; }
+.activity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.activity-text { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text2); line-height: 1.5; }
+.activity-time { font-size: 9px; color: var(--text3); margin-top: 2px; }
+
+/* Stats strip */
+.aa-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.aa-stat { background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; padding: 10px 14px; text-align: center; }
+.aa-stat-val { font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 700; color: var(--accent); }
+.aa-stat-label { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--text3); margin-top: 3px; letter-spacing: 1px; }
+
+/* AI generation result */
+.gen-result { background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; padding: 14px; font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text2); line-height: 1.6; min-height: 80px; position: relative; }
+.gen-result.empty { color: var(--text3); font-style: italic; }
+.gen-tag { font-size: 9px; letter-spacing: 2px; color: var(--accent); margin-bottom: 8px; display: block; }
+.copy-btn { position: absolute; top: 10px; right: 10px; background: var(--bg2); border: 1px solid var(--border); color: var(--text3); font-family: 'Share Tech Mono', monospace; font-size: 9px; padding: 3px 8px; border-radius: 2px; cursor: pointer; transition: all 0.15s; }
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Loading bar */
+.loading-bar { height: 2px; background: var(--bg3); border-radius: 1px; overflow: hidden; margin-bottom: 12px; }
+.loading-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 1px; transition: width 0.5s ease; }
+
+/* Status badge */
+.status-badge { display: inline-flex; align-items: center; gap: 5px; font-family: 'Share Tech Mono', monospace; font-size: 10px; padding: 3px 10px; border-radius: 2px; }
+.status-idle { background: rgba(58,96,112,0.2); color: var(--text3); border: 1px solid var(--border); }
+.status-running { background: rgba(0,212,255,0.08); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+.status-done { background: rgba(0,255,136,0.08); color: var(--accent2); border: 1px solid rgba(0,255,136,0.2); }
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-zone">
+      <div class="logo-mark"><span class="t1">TALENT</span> <span class="t3">HUNT</span></div>
+      <div class="logo-tagline">// SKILLS OVER DEGREES · v1.0</div>
+    </div>
+    <div class="user-card">
+      <div class="avatar" id="user-avatar">AK</div>
+      <div class="user-info">
+        <div class="user-name" id="user-name">Aryan Kumar</div>
+        <div class="user-rank">◆ RANK #142 · LVL 38</div>
+      </div>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="setMode(this,'dev')">Developer</button>
+      <button class="mode-btn" onclick="setMode(this,'hire')">Employer</button>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">// OVERVIEW</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">⊞</div> Dashboard</div>
+      <div class="nav-item" onclick="location.href='evolution.html'"><div class="nav-icon">📈</div> Evolution Curve</div>
+      <div class="nav-section">// COMPETE</div>
+      <div class="nav-item" onclick="location.href='codeclash.html'"><div class="nav-icon">⚔</div> Code Clash <span class="nav-badge">3 LIVE</span></div>
+      <div class="nav-item" onclick="location.href='skillhunt.html'"><div class="nav-icon">🎯</div> Skill Hunt</div>
+      <div class="nav-item" onclick="location.href='leaderboard.html'"><div class="nav-icon">🏆</div> Leaderboard</div>
+      <div class="nav-section">// GROW</div>
+      <div class="nav-item" onclick="location.href='mockbot.html'"><div class="nav-icon">🤖</div> Mock Bot</div>
+      <div class="nav-item" onclick="location.href='pathfinder.html'"><div class="nav-icon">💬</div> AI Pathfinder</div>
+      <div class="nav-item" onclick="location.href='jobsim.html'"><div class="nav-icon">🧪</div> Job Simulation <span class="nav-badge green">NEW</span></div>
+      <div class="nav-section">// PROFILE</div>
+      <div class="nav-item" onclick="location.href='trustresume.html'"><div class="nav-icon">🔗</div> Trust Resume</div>
+      <div class="nav-item" onclick="location.href='talentvault.html'"><div class="nav-icon">🏅</div> Talent Vault</div>
+      <div class="nav-item active"><div class="nav-icon">🚀</div> Auto Apply <span class="nav-badge green">NEW</span></div>
+      <div class="nav-item" onclick="doSignOut()" style="margin-top:8px;"><div class="nav-icon">⎋</div> Sign Out</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="xp-label"><span>XP PROGRESS</span><span>6,800 / 10,000</span></div>
+      <div class="xp-bar"><div class="xp-fill"></div></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div class="page-title">🚀 AUTO APPLY</div>
+      <div class="topbar-right">
+        <div id="run-status" class="status-badge status-idle">⬤ IDLE</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- STATS STRIP -->
+      <div class="aa-stats">
+        <div class="aa-stat"><div class="aa-stat-val" id="stat-applied">0</div><div class="aa-stat-label">APPLIED</div></div>
+        <div class="aa-stat"><div class="aa-stat-val" id="stat-matches" style="color:var(--accent2);">0</div><div class="aa-stat-label">MATCHES FOUND</div></div>
+        <div class="aa-stat"><div class="aa-stat-val" id="stat-pending" style="color:var(--accent3);">0</div><div class="aa-stat-label">PENDING REVIEW</div></div>
+      </div>
+
+      <div class="aa-grid">
+
+        <!-- LEFT: Profile Form -->
+        <div class="aa-form-card">
+          <div class="aa-form-head">
+            <div class="aa-form-title">// YOUR PROFILE · ENTER DETAILS TO AUTO-APPLY</div>
+            <span id="save-indicator" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--accent2);display:none;">✓ SAVED</span>
+          </div>
+          <div class="aa-form-body">
+
+            <!-- Personal Info -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">FULL NAME *</label>
+                <input class="form-input" id="f-name" type="text" placeholder="Your full name" oninput="autoSave()"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">EMAIL *</label>
+                <input class="form-input" id="f-email" type="email" placeholder="you@example.com" oninput="autoSave()"/>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">PHONE</label>
+                <input class="form-input" id="f-phone" type="tel" placeholder="+91 XXXXX XXXXX" oninput="autoSave()"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">LOCATION</label>
+                <input class="form-input" id="f-location" type="text" placeholder="City, Country" oninput="autoSave()"/>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">GITHUB / PORTFOLIO</label>
+                <input class="form-input" id="f-portfolio" type="url" placeholder="https://github.com/you" oninput="autoSave()"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">LINKEDIN</label>
+                <input class="form-input" id="f-linkedin" type="url" placeholder="https://linkedin.com/in/you" oninput="autoSave()"/>
+              </div>
+            </div>
+
+            <hr class="section-divider"/>
+
+            <!-- Skills -->
+            <div class="form-group">
+              <label class="form-label">YOUR SKILLS</label>
+              <div class="skill-add-row">
+                <input class="skill-add-input" id="skill-input" placeholder="Type a skill and press Enter or + ..." onkeydown="if(event.key==='Enter')addSkill()"/>
+                <button class="skill-add-btn" onclick="addSkill()">+ ADD</button>
+              </div>
+              <div class="skill-tags" id="skill-tags"></div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">EXPERIENCE LEVEL</label>
+                <select class="form-select" id="f-exp" onchange="autoSave()">
+                  <option value="fresher">Fresher (0–1 yr)</option>
+                  <option value="junior" selected>Junior (1–3 yrs)</option>
+                  <option value="mid">Mid-level (3–5 yrs)</option>
+                  <option value="senior">Senior (5+ yrs)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">TARGET SALARY (LPA)</label>
+                <input class="form-input" id="f-salary" type="text" placeholder="e.g. 15–20 LPA" oninput="autoSave()"/>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">TARGET ROLES (comma-separated)</label>
+              <input class="form-input" id="f-roles" type="text" placeholder="e.g. SDE-2, Frontend Engineer, Full Stack Developer" oninput="autoSave()"/>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">BIO / COVER NOTE</label>
+              <textarea class="form-textarea" id="f-bio" placeholder="Brief intro about yourself. AI will customise this for each job application..." oninput="autoSave()"></textarea>
+            </div>
+
+            <hr class="section-divider"/>
+
+            <!-- Preferences -->
+            <div class="form-group">
+              <label class="form-label">JOB TYPE PREFERENCES</label>
+              <div class="pref-grid">
+                <div class="pref-item selected" onclick="togglePref(this)"><div class="pref-check">✓</div><span class="pref-text">Full-time</span></div>
+                <div class="pref-item" onclick="togglePref(this)"><div class="pref-check"></div><span class="pref-text">Remote</span></div>
+                <div class="pref-item" onclick="togglePref(this)"><div class="pref-check"></div><span class="pref-text">Startup</span></div>
+                <div class="pref-item" onclick="togglePref(this)"><div class="pref-check"></div><span class="pref-text">MNC / Large co.</span></div>
+                <div class="pref-item" onclick="togglePref(this)"><div class="pref-check"></div><span class="pref-text">Contract / Freelance</span></div>
+                <div class="pref-item" onclick="togglePref(this)"><div class="pref-check"></div><span class="pref-text">Hybrid / On-site</span></div>
+              </div>
+            </div>
+
+            <hr class="section-divider"/>
+
+            <!-- AI Cover Letter Preview -->
+            <div class="form-group">
+              <label class="form-label">AI COVER LETTER PREVIEW</label>
+              <div class="loading-bar"><div class="loading-fill" id="gen-progress" style="width:0%"></div></div>
+              <div class="gen-result empty" id="gen-output">
+                Fill in your details above and click "Generate Preview" to see your AI-tailored cover letter.
+              </div>
+              <div style="display:flex;gap:8px;margin-top:8px;">
+                <button class="apply-btn" style="flex:1;padding:10px;" onclick="generateCoverLetter()">✨ GENERATE PREVIEW</button>
+                <button class="apply-btn" style="flex:0 0 auto;padding:10px 16px;background:rgba(0,212,255,0.12);color:var(--accent);" onclick="copyOutput()">COPY</button>
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <button class="apply-btn" id="apply-btn" onclick="startApplying()">
+              🚀 START AUTO APPLYING
+            </button>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);text-align:center;margin-top:-10px;">
+              AI will match your profile to open vacancies and apply on your behalf
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT: Vacancies + Activity -->
+        <div class="aa-right">
+
+          <!-- Matching Vacancies -->
+          <div class="aa-panel">
+            <div class="aa-panel-head">
+              <div class="aa-panel-title">// MATCHING VACANCIES</div>
+            </div>
+            <div class="aa-panel-body" id="vacancy-list">
+              <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);text-align:center;padding:20px 0;">
+                Enter your skills to see matching jobs
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Log -->
+          <div class="aa-panel">
+            <div class="aa-panel-head">
+              <div class="aa-panel-title">// APPLICATION LOG</div>
+            </div>
+            <div class="aa-panel-body" id="activity-log">
+              <div class="activity-row">
+                <div class="activity-dot" style="background:var(--text3);"></div>
+                <div>
+                  <div class="activity-text">Waiting to start auto-apply...</div>
+                  <div class="activity-time">Fill your profile and click Start</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+<script>
+const API_URL = "https://api.anthropic.com/v1/messages";
+
+// ── Skills tag system ──
+let skills = [];
+const defaultSkills = ['React', 'TypeScript', 'DSA'];
+defaultSkills.forEach(s => addSkillDirect(s));
+
+function addSkill() {
+  const input = document.getElementById('skill-input');
+  const val = input.value.trim();
+  if (!val) return;
+  val.split(',').forEach(s => { if (s.trim()) addSkillDirect(s.trim()); });
+  input.value = '';
+  updateVacancies();
+  autoSave();
+}
+
+function addSkillDirect(name) {
+  if (!name || skills.includes(name)) return;
+  skills.push(name);
+  const container = document.getElementById('skill-tags');
+  const tag = document.createElement('div');
+  tag.className = 'skill-tag';
+  tag.dataset.skill = name;
+  tag.innerHTML = `${name} <span class="skill-tag-remove" onclick="removeSkill('${name}')">×</span>`;
+  container.appendChild(tag);
+}
+
+function removeSkill(name) {
+  skills = skills.filter(s => s !== name);
+  const tag = document.querySelector(`.skill-tag[data-skill="${name}"]`);
+  if (tag) tag.remove();
+  updateVacancies();
+}
+
+// ── Pref toggle ──
+function togglePref(el) {
+  el.classList.toggle('selected');
+  el.querySelector('.pref-check').textContent = el.classList.contains('selected') ? '✓' : '';
+}
+
+// ── Auto-save to sessionStorage ──
+let saveTimer;
+function autoSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    const data = {
+      name: document.getElementById('f-name').value,
+      email: document.getElementById('f-email').value,
+      phone: document.getElementById('f-phone').value,
+      location: document.getElementById('f-location').value,
+      portfolio: document.getElementById('f-portfolio').value,
+      linkedin: document.getElementById('f-linkedin').value,
+      exp: document.getElementById('f-exp').value,
+      salary: document.getElementById('f-salary').value,
+      roles: document.getElementById('f-roles').value,
+      bio: document.getElementById('f-bio').value,
+      skills: skills
+    };
+    sessionStorage.setItem('th_profile', JSON.stringify(data));
+    // Push name to global username
+    if (data.name) {
+      const initials = data.name.split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0,2);
+      sessionStorage.setItem('th_displayName', data.name);
+      sessionStorage.setItem('th_initials', initials);
+      document.getElementById('user-name').textContent = data.name;
+      document.getElementById('user-avatar').textContent = initials;
+    }
+    const ind = document.getElementById('save-indicator');
+    ind.style.display = 'inline';
+    setTimeout(() => { ind.style.display = 'none'; }, 1500);
+  }, 600);
+}
+
+// Load saved profile on page open
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = sessionStorage.getItem('th_profile');
+  if (saved) {
+    try {
+      const d = JSON.parse(saved);
+      document.getElementById('f-name').value      = d.name      || '';
+      document.getElementById('f-email').value     = d.email     || '';
+      document.getElementById('f-phone').value     = d.phone     || '';
+      document.getElementById('f-location').value  = d.location  || '';
+      document.getElementById('f-portfolio').value = d.portfolio || '';
+      document.getElementById('f-linkedin').value  = d.linkedin  || '';
+      document.getElementById('f-salary').value    = d.salary    || '';
+      document.getElementById('f-roles').value     = d.roles     || '';
+      document.getElementById('f-bio').value       = d.bio       || '';
+      if (d.exp) document.getElementById('f-exp').value = d.exp;
+      if (d.skills && d.skills.length) {
+        // Clear defaults if user had saved skills
+        skills = [];
+        document.getElementById('skill-tags').innerHTML = '';
+        d.skills.forEach(s => addSkillDirect(s));
+      }
+    } catch(e) {}
+  }
+  const savedName = sessionStorage.getItem('th_displayName');
+  if (savedName && !document.getElementById('f-name').value) {
+    document.getElementById('f-name').value = savedName;
+  }
+  updateVacancies();
+});
+
+// ── Vacancy matching ──
+const VACANCIES = [
+  { logo:'RZ', logoColor:'var(--accent)', logoBg:'rgba(0,212,255,0.1)', company:'Razorpay', title:'SDE-2 · Full Stack', tags:['Node.js','React','PostgreSQL'], match:96 },
+  { logo:'ZP', logoColor:'var(--accent2)', logoBg:'rgba(0,255,136,0.1)', company:'Zepto', title:'Frontend Engineer', tags:['React','TypeScript','Webpack'], match:91 },
+  { logo:'SW', logoColor:'var(--accent4)', logoBg:'rgba(168,85,247,0.1)', company:'Swiggy', title:'React Developer', tags:['React','Redux','CSS'], match:88 },
+  { logo:'FK', logoColor:'var(--accent3)', logoBg:'rgba(255,107,53,0.1)', company:'Flipkart', title:'SDE-2 · Frontend', tags:['React','DSA','Performance'], match:85 },
+  { logo:'AT', logoColor:'var(--gold)', logoBg:'rgba(255,215,0,0.1)', company:'Atlassian', title:'Full Stack Engineer', tags:['Node.js','TypeScript','React'], match:82 },
+  { logo:'GG', logoColor:'#aaa', logoBg:'rgba(170,170,170,0.1)', company:'CRED', title:'SDE-2 · Backend', tags:['Python','Node.js','MongoDB'], match:74 },
+];
+
+function updateVacancies() {
+  const list = document.getElementById('vacancy-list');
+  const matched = VACANCIES.filter(v => {
+    return v.tags.some(tag => skills.some(s => s.toLowerCase().includes(tag.toLowerCase()) || tag.toLowerCase().includes(s.toLowerCase())));
+  });
+  document.getElementById('stat-matches').textContent = matched.length;
+  if (!matched.length) {
+    list.innerHTML = '<div style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--text3);text-align:center;padding:20px 0;">No matches yet — add skills above</div>';
+    return;
+  }
+  list.innerHTML = matched.map(v => `
+    <div class="vacancy-row">
+      <div class="vacancy-logo" style="background:${v.logoBg};color:${v.logoColor}">${v.logo}</div>
+      <div class="vacancy-info">
+        <div class="vacancy-title">${v.title}</div>
+        <div class="vacancy-company">${v.company}</div>
+        <div class="vacancy-tags">${v.tags.map(t=>`<span class="vtag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="vacancy-match" style="color:${v.match>=90?'var(--accent2)':v.match>=80?'var(--accent)':'var(--text2)'}">${v.match}%</div>
+    </div>
+  `).join('');
+}
+
+// ── AI Cover Letter Generation ──
+async function generateCoverLetter() {
+  const name    = document.getElementById('f-name').value.trim()    || 'the candidate';
+  const roles   = document.getElementById('f-roles').value.trim()   || 'a developer role';
+  const bio     = document.getElementById('f-bio').value.trim()     || '';
+  const exp     = document.getElementById('f-exp').value;
+  const salary  = document.getElementById('f-salary').value.trim();
+  const skillList = skills.join(', ') || 'React, TypeScript, DSA';
+
+  const output   = document.getElementById('gen-output');
+  const progress = document.getElementById('gen-progress');
+  output.className = 'gen-result';
+  output.innerHTML = '<span style="color:var(--text3);font-family:\'Share Tech Mono\'">// GENERATING...</span>';
+  progress.style.width = '0%';
+
+  let pct = 0;
+  const progTimer = setInterval(() => {
+    pct = Math.min(pct + 8, 85);
+    progress.style.width = pct + '%';
+  }, 200);
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are an expert tech recruiter and cover letter writer. Write a concise, punchy cover letter for a developer job application. Be professional but confident. No fluff. Under 180 words. Plain text only, no markdown.`,
+        messages: [{
+          role: 'user',
+          content: `Write a cover letter for: Name: ${name}, Skills: ${skillList}, Experience: ${exp}, Target role: ${roles}${salary ? ', Expected salary: ' + salary : ''}. ${bio ? 'Additional context: ' + bio : ''}`
+        }]
+      })
+    });
+    const data = await res.json();
+    clearInterval(progTimer);
+    progress.style.width = '100%';
+    const text = data.content?.[0]?.text || 'Could not generate. Please try again.';
+    output.innerHTML = `<span class="gen-tag">// AI-GENERATED COVER LETTER</span><button class="copy-btn" onclick="copyOutput()">COPY</button>${text.replace(/\n/g,'<br>')}`;
+    setTimeout(() => { progress.style.width = '0%'; }, 1000);
+  } catch(e) {
+    clearInterval(progTimer);
+    output.innerHTML = '⚠ Connection error. Please try again.';
+    output.classList.add('empty');
+    progress.style.width = '0%';
+  }
+}
+
+function copyOutput() {
+  const text = document.getElementById('gen-output').innerText.replace('// AI-GENERATED COVER LETTER', '').replace('COPY','').trim();
+  navigator.clipboard.writeText(text).catch(() => {});
+}
+
+// ── Auto Apply simulation ──
+const LOG_MESSAGES = [
+  { text: 'Scanning 847 open positions...', color: 'var(--accent)', delay: 800 },
+  { text: 'Filtering by your skills & preferences...', color: 'var(--accent)', delay: 1800 },
+  { text: 'Found 6 high-match vacancies (>74% match)', color: 'var(--accent2)', delay: 2800 },
+  { text: 'Generating tailored cover letter for Razorpay...', color: 'var(--accent4)', delay: 3800 },
+  { text: '✓ Applied to Razorpay — SDE-2 Full Stack', color: 'var(--accent2)', delay: 5200 },
+  { text: 'Generating tailored cover letter for Zepto...', color: 'var(--accent4)', delay: 6200 },
+  { text: '✓ Applied to Zepto — Frontend Engineer', color: 'var(--accent2)', delay: 7600 },
+  { text: 'Generating tailored cover letter for Swiggy...', color: 'var(--accent4)', delay: 8400 },
+  { text: '✓ Applied to Swiggy — React Developer', color: 'var(--accent2)', delay: 9800 },
+  { text: '✓ Applied to Flipkart — SDE-2 Frontend', color: 'var(--accent2)', delay: 10600 },
+  { text: '✓ Applied to Atlassian — Full Stack Engineer', color: 'var(--accent2)', delay: 11400 },
+  { text: '⚠ Skipped CRED (match below 80% threshold)', color: 'var(--accent3)', delay: 12200 },
+  { text: '✓ Auto-apply complete — 5 applications sent!', color: 'var(--accent2)', delay: 13000 },
+];
+
+function startApplying() {
+  const name  = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  if (!name || !email) { alert('Please enter your name and email first.'); return; }
+  if (!skills.length) { alert('Please add at least one skill.'); return; }
+
+  const btn    = document.getElementById('apply-btn');
+  const status = document.getElementById('run-status');
+  btn.disabled = true;
+  btn.textContent = '⏳ APPLYING...';
+  status.className = 'status-badge status-running';
+  status.innerHTML = '⬤ RUNNING';
+
+  const log = document.getElementById('activity-log');
+  log.innerHTML = '';
+  let applied = 0; let pending = 0;
+
+  LOG_MESSAGES.forEach(msg => {
+    setTimeout(() => {
+      const row = document.createElement('div');
+      row.className = 'activity-row';
+      row.innerHTML = `<div class="activity-dot" style="background:${msg.color}"></div>
+        <div><div class="activity-text" style="color:${msg.color}">${msg.text}</div>
+        <div class="activity-time">${new Date().toLocaleTimeString()}</div></div>`;
+      log.prepend(row);
+      if (msg.text.startsWith('✓ Applied')) {
+        applied++;
+        document.getElementById('stat-applied').textContent = applied;
+        pending = Math.max(0, applied - Math.floor(applied / 2));
+        document.getElementById('stat-pending').textContent = pending;
+      }
+    }, msg.delay);
+  });
+
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.textContent = '🔄 RE-RUN AUTO APPLY';
+    status.className = 'status-badge status-done';
+    status.innerHTML = '✓ DONE';
+  }, 13500);
+}
+
+// ── Utils ──
+function setMode(btn,m){document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function doSignOut(){sessionStorage.removeItem('th_profile');location.href='landing.html';}
+</script>
+</body>
+</html>

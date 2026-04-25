@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Talent Hunt — Job Simulation</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.sim-layout{display:grid;grid-template-columns:1fr 300px;gap:16px;}
+.sim-main{display:flex;flex-direction:column;gap:14px;}
+.scenario-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.scenario-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(255,107,53,0.04);}
+.scenario-title-area{display:flex;align-items:center;gap:10px;}
+.live-pill{background:rgba(255,107,53,0.12);border:1px solid rgba(255,107,53,0.3);color:var(--accent3);font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 10px;border-radius:2px;}
+.scenario-name{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--text);}
+.sim-terminal{background:#070b0f;border:none;padding:16px;font-family:'Share Tech Mono',monospace;font-size:12px;line-height:1.9;min-height:200px;max-height:260px;overflow-y:auto;}
+.sim-terminal .prompt{color:var(--accent2);}
+.sim-terminal .event{color:var(--gold);}
+.sim-terminal .chaos{color:var(--danger);}
+.sim-terminal .info{color:var(--text2);}
+.sim-terminal .cmd{color:var(--accent);}
+.task-list{border-top:1px solid var(--border);}
+.task-item{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);transition:background 0.15s;}
+.task-item:last-child{border-bottom:none;}
+.task-item:hover{background:rgba(0,212,255,0.03);}
+.task-check{width:16px;height:16px;border:1px solid var(--border2);border-radius:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:10px;transition:all 0.2s;}
+.task-check.done{background:rgba(0,255,136,0.1);border-color:var(--accent2);color:var(--accent2);}
+.task-text{flex:1;font-size:13px;color:var(--text);}
+.task-text.done{color:var(--text3);text-decoration:line-through;}
+.task-prio{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 8px;border-radius:2px;}
+.prio-crit{background:rgba(255,68,102,0.1);color:var(--danger);border:1px solid rgba(255,68,102,0.3);}
+.prio-high{background:rgba(255,107,53,0.1);color:var(--accent3);border:1px solid rgba(255,107,53,0.3);}
+.prio-med{background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.2);}
+.response-area{background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.response-head{padding:10px 16px;border-bottom:1px solid var(--border);}
+.response-textarea{width:100%;background:var(--bg3);border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;padding:14px;resize:none;outline:none;min-height:100px;line-height:1.6;}
+.response-textarea::placeholder{color:var(--text3);}
+.response-footer{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+.sim-right{display:flex;flex-direction:column;gap:12px;}
+.timer-panel{background:var(--bg2);border:1px solid rgba(255,107,53,0.3);border-radius:6px;padding:18px;text-align:center;}
+.sim-timer{font-family:'Orbitron',monospace;font-size:32px;font-weight:900;color:var(--accent3);letter-spacing:4px;}
+.sim-timer-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);margin-top:4px;}
+.score-panel{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:16px;}
+.score-item{display:flex;justify-content:space-between;margin-bottom:10px;}
+.score-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);}
+.score-num{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;}
+.sim-select-panel{background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.sim-option{padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;}
+.sim-option:last-child{border-bottom:none;}
+.sim-option:hover{background:rgba(0,212,255,0.04);}
+.sim-option-title{font-size:12px;font-weight:600;color:var(--text);}
+.sim-option-meta{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px;}
+.chaos-banner{background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.3);border-radius:4px;padding:10px 14px;display:flex;align-items:center;gap:10px;animation:fadein 0.4s ease;}
+.chaos-icon{font-size:18px;}
+.chaos-title{font-size:12px;font-weight:600;color:var(--danger);}
+.chaos-desc{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px;}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo-zone">
+      <div class="logo-mark"><span class="t1">TALENT</span> <span class="t3">HUNT</span></div>
+      <div class="logo-tagline">// SKILLS OVER DEGREES · v1.0</div>
+    </div>
+    <div class="user-card">
+      <div class="avatar">AK</div>
+      <div class="user-info">
+        <div class="user-name">Aryan Kumar</div>
+        <div class="user-rank">◆ RANK #142 · LVL 38</div>
+      </div>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="setMode(this,'dev')">Developer</button>
+      <button class="mode-btn" onclick="setMode(this,'hire')">Employer</button>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">// OVERVIEW</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">⊞</div> Dashboard</div>
+      <div class="nav-item" onclick="location.href='evolution.html'"><div class="nav-icon">📈</div> Evolution Curve</div>
+      <div class="nav-section">// COMPETE</div>
+      <div class="nav-item" onclick="location.href='codeclash.html'"><div class="nav-icon">⚔</div> Code Clash <span class="nav-badge">3 LIVE</span></div>
+      <div class="nav-item" onclick="location.href='skillhunt.html'"><div class="nav-icon">🎯</div> Skill Hunt</div>
+      <div class="nav-item" onclick="location.href='leaderboard.html'"><div class="nav-icon">🏆</div> Leaderboard</div>
+      <div class="nav-section">// GROW</div>
+      <div class="nav-item" onclick="location.href='mockbot.html'"><div class="nav-icon">🤖</div> Mock Bot</div>
+      <div class="nav-item" onclick="location.href='pathfinder.html'"><div class="nav-icon">💬</div> AI Pathfinder</div>
+      <div class="nav-item active"><div class="nav-icon">🧪</div> Job Simulation <span class="nav-badge green">NEW</span></div>
+      <div class="nav-section">// PROFILE</div>
+      <div class="nav-item" onclick="location.href='trustresume.html'"><div class="nav-icon">🔗</div> Trust Resume</div>
+      <div class="nav-item" onclick="location.href='talentvault.html'"><div class="nav-icon">🏅</div> Talent Vault</div>
+      <div class="nav-item" onclick="location.href='autoapply.html'"><div class="nav-icon">🚀</div> Auto Apply <span class="nav-badge green">NEW</span></div>
+      <div class="nav-item" onclick="doSignOut()" style="margin-top:8px;"><div class="nav-icon">⎋</div> Sign Out</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="xp-label"><span>XP PROGRESS</span><span>6,800 / 10,000</span></div>
+      <div class="xp-bar"><div class="xp-fill"></div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-title">🧪 JOB SIMULATION</div>
+      <div class="topbar-right">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="status-dot" style="background:var(--accent3);box-shadow:0 0 6px var(--accent3);animation:blink 1.5s infinite;"></div>
+          <span class="status-text">SIM IN PROGRESS</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="sim-layout">
+        <div class="sim-main">
+          <!-- CHAOS EVENT -->
+          <div class="chaos-banner" id="chaos-banner">
+            <div class="chaos-icon">🚨</div>
+            <div>
+              <div class="chaos-title">CHAOS EVENT: Production DB is down!</div>
+              <div class="chaos-desc">Your hotfix deployed 20 min ago broke the payment DB. 40K users affected. CTO is pinging you.</div>
+            </div>
+          </div>
+
+          <!-- SCENARIO TERMINAL -->
+          <div class="scenario-card">
+            <div class="scenario-head">
+              <div class="scenario-title-area">
+                <span class="live-pill">● LIVE SIM</span>
+                <div class="scenario-name">Scenario: Startup Sprint · Day 3</div>
+              </div>
+              <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);">Round 1/3</div>
+            </div>
+            <div class="sim-terminal" id="sim-t">
+              <div class="info">[08:00] Good morning. Sprint planning starts in 30min.</div>
+              <div class="info">[08:45] PM: We need the payment retry feature by EOD. Non-negotiable.</div>
+              <div class="info">[09:12] DevOps: CI pipeline is flaky. 3 tests randomly failing.</div>
+              <div class="event">[09:30] ⚠ New ticket: Client says checkout button broken in Safari</div>
+              <div class="info">[09:45] You: Working on it...</div>
+              <div class="cmd">[09:52] $ git push origin hotfix/checkout-safari</div>
+              <div class="prompt">[09:54] ✓ Hotfix deployed. DB connectivity restored.</div>
+              <div class="event">[10:01] ⚠ PM adds: Also add analytics tracking to checkout flow</div>
+              <div class="chaos">[10:15] 🚨 ALERT: Payment service returning 500. DB connection pool exhausted!</div>
+              <div class="cmd" id="last-cmd">[10:16] $ Awaiting your response...</div>
+            </div>
+            <div class="task-list" id="task-list">
+              <div class="task-item" onclick="toggleTask(this)">
+                <div class="task-check done">✓</div>
+                <div class="task-text done">Fix Safari checkout button bug</div>
+                <span class="task-prio prio-crit">CRITICAL</span>
+              </div>
+              <div class="task-item" onclick="toggleTask(this)">
+                <div class="task-check"></div>
+                <div class="task-text">Implement payment retry logic with idempotency</div>
+                <span class="task-prio prio-crit">CRITICAL</span>
+              </div>
+              <div class="task-item" onclick="toggleTask(this)">
+                <div class="task-check"></div>
+                <div class="task-text">Fix flaky CI tests in payment module</div>
+                <span class="task-prio prio-high">HIGH</span>
+              </div>
+              <div class="task-item" onclick="toggleTask(this)">
+                <div class="task-check"></div>
+                <div class="task-text">Add analytics tracking to checkout flow</div>
+                <span class="task-prio prio-med">MEDIUM</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RESPONSE AREA -->
+          <div class="response-area">
+            <div class="response-head">
+              <div class="panel-title"><span>//</span> YOUR RESPONSE</div>
+            </div>
+            <textarea class="response-textarea" id="sim-response" placeholder="How do you handle this? e.g. 'I'd roll back the hotfix, check the DB connection pool config, increase pool size...'"></textarea>
+            <div class="response-footer">
+              <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);">Your decision affects your Pressure Score</span>
+              <button class="submit-btn" style="background:var(--accent3);color:var(--bg);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;padding:8px 20px;border:none;border-radius:3px;cursor:pointer;" onclick="submitResponse()">RESPOND →</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sim-right">
+          <div class="timer-panel">
+            <div class="sim-timer" id="sim-timer">14:23</div>
+            <div class="sim-timer-sub">UNTIL NEXT CHAOS EVENT</div>
+            <div style="margin-top:10px;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;">
+              <div id="sim-timer-bar" style="height:100%;width:96%;background:linear-gradient(90deg,var(--danger),var(--accent3));transition:width 1s;"></div>
+            </div>
+          </div>
+
+          <div class="score-panel">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:2px;margin-bottom:12px;">// LIVE SCORES</div>
+            <div class="score-item">
+              <span class="score-lbl">PRESSURE HANDLE</span>
+              <span class="score-num" style="color:var(--accent2);">82</span>
+            </div>
+            <div class="score-item">
+              <span class="score-lbl">PRIORITIES</span>
+              <span class="score-num" style="color:var(--accent3);">70</span>
+            </div>
+            <div class="score-item">
+              <span class="score-lbl">COMMUNICATION</span>
+              <span class="score-num" style="color:var(--accent);">88</span>
+            </div>
+            <div class="score-item">
+              <span class="score-lbl">TECHNICAL DEPTH</span>
+              <span class="score-num" style="color:var(--accent4);">75</span>
+            </div>
+            <div style="height:1px;background:var(--border);margin:10px 0;"></div>
+            <div class="score-item">
+              <span class="score-lbl" style="color:var(--text);">OVERALL</span>
+              <span class="score-num" style="color:var(--gold);font-size:18px;">79</span>
+            </div>
+          </div>
+
+          <div class="sim-select-panel">
+            <div class="panel-head"><div class="panel-title"><span>//</span> OTHER SIMULATIONS</div></div>
+            <div class="sim-option" onclick="location.reload()">
+              <div class="sim-option-title">Startup Sprint</div>
+              <div class="sim-option-meta">3 rounds · Chaos events · Active</div>
+            </div>
+            <div class="sim-option">
+              <div class="sim-option-title">Enterprise Release</div>
+              <div class="sim-option-meta">2 rounds · Stakeholder management</div>
+            </div>
+            <div class="sim-option">
+              <div class="sim-option-title">On-Call Incident</div>
+              <div class="sim-option-meta">1 round · 3AM production fire</div>
+            </div>
+            <div class="sim-option">
+              <div class="sim-option-title">Freelance Client</div>
+              <div class="sim-option-meta">2 rounds · Scope creep · Deadlines</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+<script>
+let st = 14*60+23;
+const simLines = [
+  '<div class="chaos">[10:18] 🚨 Another alert: Redis cache also timing out</div>',
+  '<div class="info">[10:19] PM: What\'s the ETA on fixing the payment service?</div>',
+  '<div class="event">[10:22] ⚠ 3 more engineers join the incident channel</div>'
+];
+let sIdx = 0;
+setInterval(()=>{
+  if(st<=0)st=15*60; st--;
+  const m=Math.floor(st/60),s=st%60;
+  const el=document.getElementById('sim-timer');
+  if(el)el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  const bar=document.getElementById('sim-timer-bar');
+  if(bar)bar.style.width=(st/(15*60)*100)+'%';
+  if(st%(7*60)===0&&sIdx<simLines.length){
+    const t=document.getElementById('sim-t');
+    if(t){t.insertAdjacentHTML('beforeend',simLines[sIdx++]);t.scrollTop=t.scrollHeight;}
+  }
+},1000);
+
+function toggleTask(row){
+  const check=row.querySelector('.task-check');
+  const text=row.querySelector('.task-text');
+  const done=check.classList.toggle('done');
+  text.classList.toggle('done');
+  check.textContent=done?'✓':'';
+}
+function submitResponse(){
+  const val=document.getElementById('sim-response').value.trim();
+  if(!val)return;
+  const t=document.getElementById('sim-t');
+  t.insertAdjacentHTML('beforeend',`<div class="prompt">[YOU] ${val.substring(0,80)}${val.length>80?'...':''}</div>`);
+  t.scrollTop=t.scrollHeight;
+  document.getElementById('sim-response').value='';
+  setTimeout(()=>{
+    t.insertAdjacentHTML('beforeend','<div class="event">[10:28] ⚠ DB team: Connection pool fix applied. Service recovering...</div>');
+    t.insertAdjacentHTML('beforeend','<div class="prompt">[10:30] ✓ Payment service back online. Good call.</div>');
+    t.scrollTop=t.scrollHeight;
+  },1500);
+}
+function setMode(btn,m){document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function doSignOut(){location.href='landing.html';}
+</script>
+</body>
+</html>

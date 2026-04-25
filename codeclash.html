@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Talent Hunt — Code Clash</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.clash-arena{display:grid;grid-template-columns:1fr 320px;gap:16px;margin-bottom:16px;}
+.editor-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.editor-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border);background:#0a0a0a;}
+.editor-dots{display:flex;gap:6px;}
+.editor-dot{width:10px;height:10px;border-radius:50%;}
+.lang-select{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--accent);background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);padding:3px 10px;border-radius:2px;cursor:pointer;}
+.editor-body{padding:16px;font-family:'Share Tech Mono',monospace;font-size:13px;line-height:1.8;min-height:300px;background:#0d1117;color:var(--text);outline:none;white-space:pre;}
+.editor-body .kw{color:#ff79c6;}
+.editor-body .fn{color:#50fa7b;}
+.editor-body .cm{color:#6272a4;}
+.editor-body .st{color:#f1fa8c;}
+.editor-body .nm{color:#bd93f9;}
+.run-bar{padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:#0a0a0a;}
+.run-btn{background:var(--accent2);color:var(--bg);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;padding:8px 20px;border:none;border-radius:3px;cursor:pointer;letter-spacing:1px;}
+.run-btn:hover{box-shadow:0 0 16px rgba(0,255,136,0.4);}
+.submit-btn{background:var(--accent);color:var(--bg);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;padding:8px 20px;border:none;border-radius:3px;cursor:pointer;letter-spacing:1px;}
+.submit-btn:hover{box-shadow:0 0 16px rgba(0,212,255,0.4);}
+.test-result{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);flex:1;}
+.test-result.pass{color:var(--accent2);}
+.test-result.fail{color:var(--danger);}
+.clash-panel{display:flex;flex-direction:column;gap:12px;}
+.problem-card{background:var(--bg2);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.problem-head{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.problem-title{font-family:'Orbitron',monospace;font-size:12px;color:var(--text);font-weight:700;}
+.diff-tag{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 8px;border-radius:2px;}
+.diff-tag.hard{background:rgba(255,68,102,0.1);color:var(--danger);border:1px solid rgba(255,68,102,0.3);}
+.diff-tag.med{background:rgba(255,107,53,0.1);color:var(--accent3);border:1px solid rgba(255,107,53,0.3);}
+.diff-tag.easy{background:rgba(0,255,136,0.1);color:var(--accent2);border:1px solid rgba(0,255,136,0.3);}
+.problem-body{padding:14px 16px;font-size:12px;color:var(--text2);line-height:1.7;}
+.example-box{background:var(--bg3);border-left:2px solid var(--accent);padding:8px 12px;margin:10px 0;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);border-radius:0 3px 3px 0;}
+.timer-card{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:16px;text-align:center;}
+.big-timer{font-family:'Orbitron',monospace;font-size:36px;font-weight:900;color:var(--accent);letter-spacing:4px;}
+.timer-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);margin-top:4px;letter-spacing:2px;}
+.vs-card{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:14px;}
+.vs-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.vs-player{text-align:center;flex:1;}
+.vs-pname{font-family:'Orbitron',monospace;font-size:11px;color:var(--text);font-weight:700;}
+.vs-score{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;margin:4px 0;}
+.vs-status{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);}
+.vs-badge-mid{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;color:var(--text3);}
+.progress-bar-wrap{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-top:6px;}
+.progress-bar-fill{height:100%;border-radius:2px;transition:width 0.5s;}
+.clash-lobby{background:var(--bg2);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.lobby-head{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.lobby-title{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--text2);}
+.clash-lobby-list{display:flex;flex-direction:column;}
+.lobby-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;}
+.lobby-item:last-child{border-bottom:none;}
+.lobby-item:hover{background:rgba(0,212,255,0.04);}
+.lobby-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.lobby-info{flex:1;}
+.lobby-name{font-size:12px;font-weight:600;color:var(--text);}
+.lobby-meta{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px;}
+.lobby-badge{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 8px;border-radius:2px;}
+.lb-live{background:rgba(0,255,136,0.12);color:var(--accent2);border:1px solid rgba(0,255,136,0.3);}
+.lb-open{background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.2);}
+.lb-inv{background:rgba(168,85,247,0.1);color:var(--accent4);border:1px solid rgba(168,85,247,0.3);}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo-zone">
+      <div class="logo-mark"><span class="t1">TALENT</span> <span class="t3">HUNT</span></div>
+      <div class="logo-tagline">// SKILLS OVER DEGREES · v1.0</div>
+    </div>
+    <div class="user-card">
+      <div class="avatar">AK</div>
+      <div class="user-info">
+        <div class="user-name">Aryan Kumar</div>
+        <div class="user-rank">◆ RANK #142 · LVL 38</div>
+      </div>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="setMode(this,'dev')">Developer</button>
+      <button class="mode-btn" onclick="setMode(this,'hire')">Employer</button>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">// OVERVIEW</div>
+      <div class="nav-item" onclick="location.href='dashboard.html'"><div class="nav-icon">⊞</div> Dashboard</div>
+      <div class="nav-item" onclick="location.href='evolution.html'"><div class="nav-icon">📈</div> Evolution Curve</div>
+      <div class="nav-section">// COMPETE</div>
+      <div class="nav-item active"><div class="nav-icon">⚔</div> Code Clash <span class="nav-badge">3 LIVE</span></div>
+      <div class="nav-item" onclick="location.href='skillhunt.html'"><div class="nav-icon">🎯</div> Skill Hunt</div>
+      <div class="nav-item" onclick="location.href='leaderboard.html'"><div class="nav-icon">🏆</div> Leaderboard</div>
+      <div class="nav-section">// GROW</div>
+      <div class="nav-item" onclick="location.href='mockbot.html'"><div class="nav-icon">🤖</div> Mock Bot</div>
+      <div class="nav-item" onclick="location.href='pathfinder.html'"><div class="nav-icon">💬</div> AI Pathfinder</div>
+      <div class="nav-item" onclick="location.href='jobsim.html'"><div class="nav-icon">🧪</div> Job Simulation <span class="nav-badge green">NEW</span></div>
+      <div class="nav-section">// PROFILE</div>
+      <div class="nav-item" onclick="location.href='trustresume.html'"><div class="nav-icon">🔗</div> Trust Resume</div>
+      <div class="nav-item" onclick="location.href='talentvault.html'"><div class="nav-icon">🏅</div> Talent Vault</div>
+      <div class="nav-item" onclick="location.href='autoapply.html'"><div class="nav-icon">🚀</div> Auto Apply <span class="nav-badge green">NEW</span></div>
+      <div class="nav-item" onclick="doSignOut()" style="margin-top:8px;"><div class="nav-icon">⎋</div> Sign Out</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="xp-label"><span>XP PROGRESS</span><span>6,800 / 10,000</span></div>
+      <div class="xp-bar"><div class="xp-fill"></div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-title">⚔ CODE CLASH</div>
+      <div class="topbar-right">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="status-dot"></div>
+          <span class="status-text">3 LIVE BATTLES</span>
+        </div>
+        <button class="panel-action" onclick="createClash()">+ CREATE CLASH</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- LIVE CLASH ARENA -->
+      <div class="clash-arena">
+        <div>
+          <div class="editor-wrap">
+            <div class="editor-topbar">
+              <div class="editor-dots">
+                <div class="editor-dot" style="background:#ff5f57;"></div>
+                <div class="editor-dot" style="background:#febc2e;"></div>
+                <div class="editor-dot" style="background:#28c840;"></div>
+              </div>
+              <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);">solution.js</div>
+              <select class="lang-select" onchange="switchLang(this.value)">
+                <option>JavaScript</option>
+                <option>Python</option>
+                <option>Java</option>
+                <option>C++</option>
+              </select>
+            </div>
+            <div class="editor-body" id="editor" contenteditable="true"><span class="cm">// Binary Tree Maximum Path Sum</span>
+<span class="cm">// Return the maximum path sum through any path.</span>
+
+<span class="kw">function</span> <span class="fn">maxPathSum</span>(root) {
+  <span class="kw">let</span> maxSum = -Infinity;
+
+  <span class="kw">const</span> <span class="fn">dfs</span> = (node) => {
+    <span class="kw">if</span> (!node) <span class="kw">return</span> <span class="nm">0</span>;
+    <span class="kw">const</span> left  = Math.<span class="fn">max</span>(<span class="fn">dfs</span>(node.left), <span class="nm">0</span>);
+    <span class="kw">const</span> right = Math.<span class="fn">max</span>(<span class="fn">dfs</span>(node.right), <span class="nm">0</span>);
+    maxSum = Math.<span class="fn">max</span>(maxSum, node.val + left + right);
+    <span class="kw">return</span> node.val + Math.<span class="fn">max</span>(left, right);
+  };
+
+  <span class="fn">dfs</span>(root);
+  <span class="kw">return</span> maxSum;
+}</div>
+            <div class="run-bar">
+              <button class="run-btn" onclick="runCode()">▶ RUN</button>
+              <button class="submit-btn" onclick="submitCode()">SUBMIT →</button>
+              <span class="test-result" id="test-result">// 3/5 test cases passing</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="clash-panel">
+          <div class="timer-card">
+            <div class="big-timer" id="clash-timer">08:42</div>
+            <div class="timer-sub">TIME REMAINING</div>
+            <div style="margin-top:10px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;">
+              <div id="timer-bar" style="height:100%;width:58%;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width 1s;"></div>
+            </div>
+          </div>
+
+          <div class="vs-card">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:10px;">// LIVE BATTLE</div>
+            <div class="vs-row">
+              <div class="vs-player">
+                <div class="vs-pname">ARYAN K.</div>
+                <div class="vs-score" style="color:var(--accent);">3</div>
+                <div class="vs-status" style="color:var(--accent);">● CODING...</div>
+              </div>
+              <div class="vs-badge-mid">VS</div>
+              <div class="vs-player">
+                <div class="vs-pname">SNEHA M.</div>
+                <div class="vs-score" style="color:var(--text3);">2</div>
+                <div class="vs-status">● TESTING</div>
+              </div>
+            </div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);margin-bottom:4px;">YOU <span style="float:right">OPPONENT</span></div>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" style="width:60%;background:linear-gradient(90deg,var(--accent),var(--accent2));"></div>
+            </div>
+          </div>
+
+          <div class="problem-card">
+            <div class="problem-head">
+              <div class="problem-title">Binary Tree Max Path</div>
+              <span class="diff-tag hard">HARD</span>
+            </div>
+            <div class="problem-body">
+              Given a binary tree, find the <strong style="color:var(--accent)">maximum path sum</strong>. A path is any sequence of nodes from some starting node to any node in the tree.
+              <div class="example-box">Input: root = [1,2,3]<br>Output: 6<br>// Path: 2 → 1 → 3</div>
+              <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);margin-top:8px;">
+                Constraints: -1000 ≤ Node.val ≤ 1000 · n ≤ 30,000
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOBBY -->
+      <div class="clash-lobby">
+        <div class="lobby-head">
+          <div class="lobby-title">// ACTIVE CLASHES</div>
+          <div style="display:flex;gap:6px;">
+            <button class="ftab active" onclick="setTab(this)">ALL</button>
+            <button class="ftab" onclick="setTab(this)">LIVE</button>
+            <button class="ftab" onclick="setTab(this)">OPEN</button>
+            <button class="ftab" onclick="setTab(this)">INVITED</button>
+          </div>
+        </div>
+        <div class="clash-lobby-list">
+          <div class="lobby-item">
+            <div class="lobby-dot" style="background:var(--accent2);box-shadow:0 0 6px var(--accent2);animation:blink 1.5s infinite;"></div>
+            <div class="lobby-info">
+              <div class="lobby-name">Binary Tree Max Path Sum</div>
+              <div class="lobby-meta">4 players · 12:34 left · Hard · DSA</div>
+            </div>
+            <span class="lobby-badge lb-live">LIVE</span>
+          </div>
+          <div class="lobby-item">
+            <div class="lobby-dot" style="background:var(--accent);"></div>
+            <div class="lobby-info">
+              <div class="lobby-name">DP Coin Change Variant</div>
+              <div class="lobby-meta">2/6 joined · Starts in 8 min · Medium · DP</div>
+            </div>
+            <span class="lobby-badge lb-open">JOIN</span>
+          </div>
+          <div class="lobby-item">
+            <div class="lobby-dot" style="background:var(--accent4);"></div>
+            <div class="lobby-info">
+              <div class="lobby-name">React Hook Challenge #12</div>
+              <div class="lobby-meta">Private · Employer: Razorpay · Frontend</div>
+            </div>
+            <span class="lobby-badge lb-inv">INVITED</span>
+          </div>
+          <div class="lobby-item">
+            <div class="lobby-dot" style="background:var(--accent);"></div>
+            <div class="lobby-info">
+              <div class="lobby-name">Graph BFS Shortest Path</div>
+              <div class="lobby-meta">3/4 joined · Open · Medium · Graphs</div>
+            </div>
+            <span class="lobby-badge lb-open">JOIN</span>
+          </div>
+          <div class="lobby-item">
+            <div class="lobby-dot" style="background:var(--accent2);box-shadow:0 0 6px var(--accent2);animation:blink 1.5s infinite;"></div>
+            <div class="lobby-info">
+              <div class="lobby-name">System Design: Rate Limiter</div>
+              <div class="lobby-meta">6 players · 4:12 left · Hard · System Design</div>
+            </div>
+            <span class="lobby-badge lb-live">LIVE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+<script>
+let t = 8*60+42;
+setInterval(()=>{
+  if(t<=0)t=15*60; t--;
+  const m=Math.floor(t/60),s=t%60;
+  const el=document.getElementById('clash-timer');
+  if(el)el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  const bar=document.getElementById('timer-bar');
+  if(bar)bar.style.width=(t/(15*60)*100)+'%';
+},1000);
+
+function runCode(){
+  const r=document.getElementById('test-result');
+  r.textContent='// Running tests...';r.className='test-result';
+  setTimeout(()=>{r.textContent='✓ 4/5 test cases passing';r.className='test-result pass';},900);
+}
+function submitCode(){
+  const r=document.getElementById('test-result');
+  r.textContent='// Submitting...';r.className='test-result';
+  setTimeout(()=>{r.textContent='✓ ACCEPTED · +240 XP · +1 Win';r.className='test-result pass';},1200);
+}
+function createClash(){alert('Create Clash modal — coming soon!');}
+function setMode(btn,mode){document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function setTab(btn){btn.parentElement.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function switchLang(l){console.log('Switch to',l);}
+function doSignOut(){location.href='landing.html';}
+</script>
+</body>
+</html>
